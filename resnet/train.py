@@ -3,10 +3,11 @@ from torch import device, cuda, load, save
 from torch.nn import Linear, CrossEntropyLoss
 from torch.utils.data import DataLoader
 from torch.optim import Adam
-from torchvision.models import resnet
+from model import resnet152
 from torchvision.transforms import Compose, RandomResizedCrop, RandomHorizontalFlip, ToTensor, Normalize, Resize,\
     CenterCrop
 from torchvision.datasets import ImageFolder
+from datetime import datetime
 
 # ====================
 # customise parameters
@@ -83,12 +84,12 @@ device = device("cuda:0" if cuda.is_available() else "cpu")
 print(f"device\n{device}\n")
 
 # set up the model as ResNet 152
-model = resnet.resnet152(weights=None)
+model = resnet152(weights=None)
 print(f"ResNet model architecture\n{model}\n")
 
-# set up the model weight as the default weight, i.e. "resnet152-b121ed2d.pth"
+# set up the model weight as the default weight, i.e. "resnet152-19000101000000.pth"
 model.to(device)
-model_weight_path = project_path + "resnet/weights/resnet152-b121ed2d.pth"
+model_weight_path = project_path + "resnet/weights/resnet152-19000101000000.pth"
 missing_keys, unexpected_keys = model.load_state_dict(
     load(model_weight_path),
     strict=False
@@ -105,7 +106,6 @@ loss_function = CrossEntropyLoss()
 optimizer = Adam(model.parameters(), lr=0.0001)
 
 best_acc = 0.0
-save_path = project_path + "resnet/weights/resnet152.pth"
 
 # do the training
 for epoch in range(3):
@@ -127,4 +127,5 @@ for epoch in range(3):
     print()
 
 # save the after training weight
-save(model.state_dict(), 'weights/resnet152.pth')
+time = datetime.now().strftime("%Y%m%d%H%M%S")
+save(model.state_dict(), "weights/resnet152-" + time + ".pth")
