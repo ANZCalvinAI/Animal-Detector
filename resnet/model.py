@@ -9,6 +9,7 @@ from torchvision.models._api import WeightsEnum
 from torchvision.models._utils import _ovewrite_named_param
 
 
+# define convolutional layer 3 × 3
 def conv3x3(in_planes: int, out_planes: int, stride: int = 1, groups: int = 1, dilation: int = 1) -> nn.Conv2d:
     return nn.Conv2d(
         in_planes,
@@ -21,11 +22,13 @@ def conv3x3(in_planes: int, out_planes: int, stride: int = 1, groups: int = 1, d
         dilation=dilation,
     )
 
-  
+
+# define convolutional layer 1 × 1
 def conv1x1(in_planes: int, out_planes: int, stride: int = 1) -> nn.Conv2d:
     return nn.Conv2d(in_planes, out_planes, kernel_size=1, stride=stride, bias=False)
 
 
+# define class basic block
 class BasicBlock(nn.Module):
     expansion: int = 1
 
@@ -75,6 +78,7 @@ class BasicBlock(nn.Module):
         return out  
 
 
+# define class bottleneck
 class Bottleneck(nn.Module):
     expansion: int = 4
 
@@ -126,7 +130,8 @@ class Bottleneck(nn.Module):
 
         return out
 
-    
+
+# define class ResNet
 class ResNet(nn.Module):
     def __init__(
         self,
@@ -245,6 +250,7 @@ class ResNet(nn.Module):
         return self._forward_impl(x)
 
 
+# define function _resnet(). this function outputs a general ResNet
 def _resnet(
     block: Type[Union[BasicBlock, Bottleneck]],
     layers: List[int],
@@ -263,5 +269,6 @@ def _resnet(
     return model
 
 
+# define function resnet152(). this function outputs particularly a ResNet 152
 def resnet152(*, weights=None, progress: bool = True, **kwargs: Any) -> ResNet:
     return _resnet(Bottleneck, [3, 8, 36, 3], weights, progress, **kwargs)
