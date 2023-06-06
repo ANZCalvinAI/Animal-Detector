@@ -16,11 +16,11 @@ from datetime import datetime
 # project path parameter
 path_project = "C:/Users/cz199/PycharmProjects/Animal-Detector/"
 
-# traning batch size
-batch_size = 16
-
-# training maximal epochs
-epochs_max = 3
+# training parameters
+params = {
+    "batch_size": 16,  # traning batch size
+    "epochs_max": 3    # training maximal epochs
+}
 
 # =======================
 # specify path parameters
@@ -69,7 +69,7 @@ with open("class_indices.json", "w") as json_file:
 
 train_loader = DataLoader(
     train_dataset,
-    batch_size=batch_size,
+    batch_size=params["batch_size"],
     shuffle=True,
     num_workers=0
 )
@@ -124,7 +124,7 @@ optimizer = Adam(model.parameters(), lr=0.0001)
 best_acc = 0.0
 
 # do the training
-for epoch in range(epoch_max):
+for epoch in range(params["epochs_max"]):
     model.train()
     running_loss = 0.0
     for step, data in enumerate(train_loader, start=0):
