@@ -11,19 +11,20 @@ Fine tuned YOLOv5 Large + fine tuned ResNet 152
 
 ## 2. ResNet
 ### 2.1 Datasets
-- Dataset Path: datasets/iNat2021/
+- Dataset: iNaturalist 2021
+- Dataset Path: "datasets/iNat2021/"
 
 ### 2.2 Models
 - Model Type: ResNet 152
-- Model Path: resnet/model.py
+- Model Path: "resnet/model.py"
 
 ### 2.3 Weights
-- Weight Path: resnet/weights/  
+- Weight Path: "resnet/weights/"
 - Weight Filename Format: "resnet-YYYYMMDDHHMMSS.pth". For example, the filename of a weight would be "resnet-20230101000000.pth" for a weight created at 2023-01-01 00:00:00.
 - Pretrained Weight Filename: "resnet-19000101000000.pth"
 
 ### 2.4 Training
-- Script Path: resnet/train.py
+- Script Path: "resnet/train.py"
 - Training Logics: Train the most recently created weight, then save it as a more recently created weight.
 
 ### Document
