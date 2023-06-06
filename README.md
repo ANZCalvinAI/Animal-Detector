@@ -13,12 +13,16 @@ Fine tuned YOLOv5 Large + fine tuned ResNet 152
 ### 2.1 Datasets
 - Dataset Path: datasets/iNat2021/
 
-### 2.2 Weights
+### 2.2 Models
+- Model: ResNet 152
+- Model Path: resnet/model.py
+
+### 2.3 Weights
 - Weight Path: resnet/weights/  
 - Weight Filename Format: "resnet-YYYYMMDDHHMMSS.pth". For example, the filename of a weight would be "resnet-20230101000000.pth" for a weight created at 2023-01-01 00:00:00.
-- Default Weight Filename: "resnet-19000101000000.pth"
+- Pretrained Weight Filename: "resnet-19000101000000.pth"
 
-### 2.3 Training
+### 2.4 Training
 - Script Path: resnet/train.py
 
 ### Document
