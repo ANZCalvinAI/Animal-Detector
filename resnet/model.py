@@ -8,7 +8,9 @@ from torchvision.utils import _log_api_usage_once
 from torchvision.models._api import WeightsEnum
 from torchvision.models._utils import _ovewrite_named_param
 
-
+# ===========================
+# define convolutional layers
+# ===========================
 # define convolutional layer 3 × 3
 def conv3x3(in_planes: int, out_planes: int, stride: int = 1, groups: int = 1, dilation: int = 1) -> nn.Conv2d:
     return nn.Conv2d(
@@ -28,7 +30,9 @@ def conv1x1(in_planes: int, out_planes: int, stride: int = 1) -> nn.Conv2d:
     return nn.Conv2d(in_planes, out_planes, kernel_size=1, stride=stride, bias=False)
 
 
+# ========================
 # define class basic block
+# ========================
 class BasicBlock(nn.Module):
     expansion: int = 1
 
@@ -78,7 +82,9 @@ class BasicBlock(nn.Module):
         return out  
 
 
+# =======================
 # define class bottleneck
+# =======================
 class Bottleneck(nn.Module):
     expansion: int = 4
 
@@ -131,6 +137,9 @@ class Bottleneck(nn.Module):
         return out
 
 
+# =============
+# define ResNet
+# =============
 # define class ResNet
 class ResNet(nn.Module):
     def __init__(
