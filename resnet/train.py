@@ -16,9 +16,15 @@ from datetime import datetime
 # project path parameter
 path_project = "C:/Users/cz199/PycharmProjects/Animal-Detector/"
 
-# ===============
-# path parameters
-# ===============
+# traning batch size
+batch_size = 16
+
+# training maximal epochs
+epochs_max = 3
+
+# =======================
+# specify path parameters
+# =======================
 path_image = path_project + "datasets/iNat2021/images/"
 path_weight = path_project + "resnet/weights/"
 
@@ -61,7 +67,6 @@ json_str = dumps(cla_dict, indent=4)
 with open("class_indices.json", "w") as json_file:
     json_file.write(json_str)
 
-batch_size = 16
 train_loader = DataLoader(
     train_dataset,
     batch_size=batch_size,
