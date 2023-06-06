@@ -11,10 +11,11 @@ Fine tuned YOLOv5 Large + fine tuned ResNet 152
 
 ## 2. ResNet
 ### 2.1 Datasets
+- Dataset Type: iNaturalist 2021
 - Dataset Path: datasets/iNat2021/
 
 ### 2.2 Models
-- Model: ResNet 152
+- Model Type: ResNet 152
 - Model Path: resnet/model.py
 
 ### 2.3 Weights
