@@ -7,13 +7,20 @@ from model import resnet152
 from torchvision.transforms import Compose, RandomResizedCrop, RandomHorizontalFlip, ToTensor, Normalize, Resize,\
     CenterCrop
 from torchvision.datasets import ImageFolder
+from utils import get_weight_latest
 from datetime import datetime
 
 # ====================
 # customise parameters
 # ====================
 # project path parameter
-project_path = "C:/Users/cz199/PycharmProjects/Animal-Detector/"
+path_project = "C:/Users/cz199/PycharmProjects/Animal-Detector/"
+
+# ===============
+# path parameters
+# ===============
+path_image = path_project + "datasets/iNat2021/images/"
+path_weight = path_project + "resnet/weights/"
 
 # =====================
 # load and process data
@@ -39,10 +46,8 @@ data_transform = {
     ])
 }
 
-image_path = project_path + "datasets/iNat2021/images/"
-
 train_dataset = ImageFolder(
-    root=image_path + "train",
+    root=path_image + "train",
     transform=data_transform["train"]
 )
 train_num = len(train_dataset)
@@ -65,7 +70,7 @@ train_loader = DataLoader(
 )
 
 val_dataset = ImageFolder(
-    root=image_path + "val",
+    root=path_image + "val",
     transform=data_transform["val"]
 )
 val_num = len(val_dataset)
@@ -87,11 +92,17 @@ print(f"device\n{device}\n")
 model = resnet152(weights=None)
 print(f"ResNet model architecture\n{model}\n")
 
-# set up the model weight as the default weight, i.e. "resnet152-19000101000000.pth"
+# load the latest weight filename
+weight_latest = get_weight_latest(path_weight)
+
+"""
+set up the model weight to be trained as the latest created weight.
+the default weight has been renamed as "resnet152-19000101000000.pth".
+the default weight would be considered the latest weight, when there is no other weights.
+"""
 model.to(device)
-model_weight_path = project_path + "resnet/weights/resnet152-19000101000000.pth"
 missing_keys, unexpected_keys = model.load_state_dict(
-    load(model_weight_path),
+    load(path_weight + weight_latest),
     strict=False
 )
 in_channel = model.fc.in_features
@@ -108,7 +119,7 @@ optimizer = Adam(model.parameters(), lr=0.0001)
 best_acc = 0.0
 
 # do the training
-for epoch in range(3):
+for epoch in range(epoch_max):
     model.train()
     running_loss = 0.0
     for step, data in enumerate(train_loader, start=0):
@@ -127,5 +138,5 @@ for epoch in range(3):
     print()
 
 # save the after training weight
-time = datetime.now().strftime("%Y%m%d%H%M%S")
-save(model.state_dict(), "weights/resnet152-" + time + ".pth")
+time = datetime.now().strftime("%Y%m%d%H%M%S")  # e.g. 2023-01-01 00:00:00 -> resnet-20230101000000.pth
+save(path_project, "resnet/weights/resnet152-" + time + ".pth")
