@@ -11,7 +11,6 @@ Fine tuned YOLOv5 Large + fine tuned ResNet 152
 
 ## 2. ResNet
 ### 2.1 Datasets
-- Dataset Type: iNaturalist 2021
 - Dataset Path: datasets/iNat2021/
 
 ### 2.2 Models
@@ -25,6 +24,7 @@ Fine tuned YOLOv5 Large + fine tuned ResNet 152
 
 ### 2.4 Training
 - Script Path: resnet/train.py
+- Training Logics: Train the most recently created weight, then save it as a more recently created weight.
 
 ### Document
 > He K, Zhang X, Ren S, Sun J. Deep residual learning for image recognition. InProceedings of the IEEE conference on computer vision and pattern recognition 2016 (pp. 770-778).
