@@ -3,7 +3,7 @@
 ![alt text](https://github.com/ANZCalvinAI/Animal-Detector/blob/main/Koalas.jpg?raw=true)
 
 ## 0. Architecture
-Fined tuned YOLOv5 Large + fined tuned ResNet 152
+Fine tuned YOLOv5 Large + fine tuned ResNet 152
 
 ## References
 - Jocher G, Chaurasia A, Stoken A, Borovec J, Kwon Y, Michael K, Fang J, Yifu Z, Wong C, Montes D, Wang Z. Ultralytics/yolov5: v7. 0-YOLOv5 SotA realtime instance segmentation. Zenodo. 2022 Nov.
