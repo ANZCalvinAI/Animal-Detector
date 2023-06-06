@@ -2,6 +2,7 @@ from os import listdir
 import numpy as np
 
 
+# define function get_weight_latest(). this function outputs the filename of the latest weight, given the path weights
 def get_weight_latest(path_weight):
     time_list = np.array([])
     for filename in listdir(path_weight):
