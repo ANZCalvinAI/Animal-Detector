@@ -1,8 +1,10 @@
+import os
 from json import dumps
 from torch import device, cuda, load, save
 from torch.nn import Linear, CrossEntropyLoss
 from torch.utils.data import DataLoader
 from torch.optim import Adam
+from torch.hub import load as hub_load
 from model import resnet152
 from torchvision.datasets import ImageFolder
 from utils import data_transform, get_weight_latest
@@ -16,7 +18,7 @@ path_project = "C:/Users/cz199/PycharmProjects/Animal-Detector/"
 
 # training parameters
 params = {
-    "batch_size": 16,  # traning batch size
+    "batch_size": 16,  # training batch size
     "epochs_max": 3    # training maximal epochs
 }
 
@@ -58,7 +60,7 @@ val_dataset = ImageFolder(
 val_num = len(val_dataset)
 validate_loader = DataLoader(
     val_dataset,
-    batch_size=batch_size,
+    batch_size=params["batch_size"],
     shuffle=False,
     num_workers=0
 )
@@ -71,11 +73,26 @@ device = device("cuda:0" if cuda.is_available() else "cpu")
 print(f"device\n{device}\n")
 
 # set up the model as ResNet 152
-model = resnet152(weights=None)
-print(f"ResNet model architecture\n{model}\n")
+# if the weight path does not exist
+if not os.path.exists(path_weight):
+    # load the model and the weight from Torch Hub
+    model = hub_load("pytorch/vision:v0.10.0", "resnet152", pretrained=True)
+else:
+    # if the weight path exist but there is no weight file
+    if not len(os.listdir(path_weight)):
+        # load the model and the weight from Torch Hub
+        model = hub_load("pytorch/vision:v0.10.0", "resnet152", pretrained=True)
+    else:
+        # if the weight path exist and there is one or more weight files
+        model = resnet152(weights=None)
+        # load the latest weight file
+        weight_latest = get_weight_latest(path_weight)
+        missing_keys, unexpected_keys = model.load_state_dict(
+            load(path_weight + weight_latest),
+            strict=False
+        )
 
-# load the latest weight filename
-weight_latest = get_weight_latest(path_weight)
+print(f"ResNet model architecture\n{model}\n")
 
 """
 set up the model weight to be trained as the latest created weight.
@@ -83,10 +100,6 @@ the default weight has been renamed as "resnet152-19000101000000.pth".
 the default weight would be considered the latest weight, when there is no other weights.
 """
 model.to(device)
-missing_keys, unexpected_keys = model.load_state_dict(
-    load(path_weight + weight_latest),
-    strict=False
-)
 in_channel = model.fc.in_features
 model.fc = Linear(in_channel, 5)
 
@@ -120,5 +133,5 @@ for epoch in range(params["epochs_max"]):
     print()
 
 # save the after training weight
-time = datetime.now().strftime("%Y%m%d%H%M%S")  # e.g. 2023-01-01 00:00:00 -> resnet-20230101000000.pth
+time = datetime.now().strftime("%Y%m%d%H%M%S")  # e.g. 2023-01-01 00:00:00 -> resnet152-20230101000000.pth
 save(path_project, "resnet/weights/resnet152-" + time + ".pth")
