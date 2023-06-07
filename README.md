@@ -6,6 +6,11 @@
 Fine tuned YOLOv5 Large + fine tuned ResNet 152
 
 ## 1. YOLO
+### 1.1 Datasets
+- Dataset: iNaturalist 2017
+- Dataset Path: "datasets/iNat2017/"
+- Data Format Path: "yolo/data/inat2017.yaml" 
+
 ### Document
 > Jocher G, Chaurasia A, Stoken A, Borovec J, Kwon Y, Michael K, Fang J, Yifu Z, Wong C, Montes D, Wang Z. Ultralytics/yolov5: v7. 0-YOLOv5 SotA realtime instance segmentation. Zenodo. 2022 Nov.
 
