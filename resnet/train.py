@@ -4,10 +4,8 @@ from torch.nn import Linear, CrossEntropyLoss
 from torch.utils.data import DataLoader
 from torch.optim import Adam
 from model import resnet152
-from torchvision.transforms import Compose, RandomResizedCrop, RandomHorizontalFlip, ToTensor, Normalize, Resize,\
-    CenterCrop
 from torchvision.datasets import ImageFolder
-from utils import get_weight_latest
+from utils import data_transform, get_weight_latest
 from datetime import datetime
 
 # ====================
@@ -31,27 +29,6 @@ path_weight = path_project + "resnet/weights/"
 # =====================
 # load and process data
 # =====================
-data_transform = {
-    "train": Compose([
-        RandomResizedCrop(224),
-        RandomHorizontalFlip(),
-        ToTensor(),
-        Normalize(
-            [0.485, 0.456, 0.406],
-            [0.229, 0.224, 0.225]
-        )
-    ]),
-    "val": Compose([
-        Resize(256),
-        CenterCrop(224),
-        ToTensor(),
-        Normalize(
-            [0.485, 0.456, 0.406],
-            [0.229, 0.224, 0.225]
-        )
-    ])
-}
-
 train_dataset = ImageFolder(
     root=path_image + "train",
     transform=data_transform["train"]
