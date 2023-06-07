@@ -46,5 +46,5 @@ def get_weight_latest(path_weight):
         time = int(filename[10:24])
         time_list = np.append(time_list, time)
     out = str(int(np.amax(time_list)))
-    out = "resnet-" + out + ".pth"
+    out = "resnet152-" + out + ".pth"
     return out
