@@ -11,6 +11,10 @@ Fine tuned YOLOv5 Large + fine tuned ResNet 152
 - Dataset Path: "datasets/iNat2017/"
 - Data Format Path: "yolo/data/inat2017.yaml" 
 
+### 1.2 Models
+- Model Type: YOLOv5 Large
+- Model Path: "yolo/models/yolov5l.yaml"
+
 ### Document
 > Jocher G, Chaurasia A, Stoken A, Borovec J, Kwon Y, Michael K, Fang J, Yifu Z, Wong C, Montes D, Wang Z. Ultralytics/yolov5: v7. 0-YOLOv5 SotA realtime instance segmentation. Zenodo. 2022 Nov.
 
