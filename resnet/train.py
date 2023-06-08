@@ -75,8 +75,11 @@ print(f"device\n{device}\n")
 # =======================
 # set up model and weight
 # =======================
-# set up the model as ResNet 152
-
+"""
+set up the model as ResNet 152.
+download and use the pretrained weight if there is no existing weight in the weight path;
+otherwise use the most recently created weight in the weight path.
+"""
 # if there is no weight path
 if not os.path.exists(path_weight):
     # load the model and the pretrained weight from Torch Hub
