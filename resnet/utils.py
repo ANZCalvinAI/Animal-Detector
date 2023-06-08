@@ -13,6 +13,9 @@ Normalize: ....
 Resize: ...;
 CenterCrop: ...;
 Normalize: ....
+
+(c) testing:
+....
 """
 data_transform = {
     "train": Compose([
@@ -20,8 +23,8 @@ data_transform = {
         RandomHorizontalFlip(),
         ToTensor(),
         Normalize(
-            [0.485, 0.456, 0.406],
-            [0.229, 0.224, 0.225]
+            mean=[0.485, 0.456, 0.406],
+            std=[0.229, 0.224, 0.225]
         )
     ]),
     "val": Compose([
@@ -29,17 +32,27 @@ data_transform = {
         CenterCrop(224),
         ToTensor(),
         Normalize(
-            [0.485, 0.456, 0.406],
-            [0.229, 0.224, 0.225]
+            mean=[0.485, 0.456, 0.406],
+            std=[0.229, 0.224, 0.225]
         )
+    ]),
+    "test": Compose([
+        Resize(256),
+        CenterCrop(224),
+        ToTensor(),
+        Normalize(
+            mean=[0.485, 0.456, 0.406],
+            std=[0.229, 0.224, 0.225]
+        ),
     ])
 }
-
 
 """
 define function get_weight_latest(). 
 this function outputs the filename of the latest weight, given the path of weights as the input
 """
+
+
 def get_weight_latest(path_weight):
     time_list = np.array([])
     for filename in listdir(path_weight):
