@@ -65,25 +65,29 @@ validate_loader = DataLoader(
     num_workers=0
 )
 
-# =======================
-# set up device and model
-# =======================
+# =============
+# set up device
+# =============
 # set up the device as GPU as first choice and CPU as alternative
 device = device("cuda:0" if cuda.is_available() else "cpu")
 print(f"device\n{device}\n")
 
+# =======================
+# set up model and weight
+# =======================
 # set up the model as ResNet 152
-# if the weight path does not exist
+
+# if there is no weight path
 if not os.path.exists(path_weight):
-    # load the model and the weight from Torch Hub
+    # load the model and the pretrained weight from Torch Hub
     model = hub_load("pytorch/vision:v0.10.0", "resnet152", pretrained=True)
 else:
-    # if the weight path exist but there is no weight file
+    # if there is a weight path but there is no weight file in the path
     if not len(os.listdir(path_weight)):
-        # load the model and the weight from Torch Hub
+        # load the model and the pretrained weight from Torch Hub
         model = hub_load("pytorch/vision:v0.10.0", "resnet152", pretrained=True)
     else:
-        # if the weight path exist and there is one or more weight files
+        # if there one or more weight files in an existing weight path
         # load the ResNet 152 model
         model = resnet152(weights=None)
         # search for the latest weight
