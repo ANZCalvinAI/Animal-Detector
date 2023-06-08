@@ -83,13 +83,13 @@ otherwise use the most recently created weight in the weight path.
 # if the weight folder has not been created
 if not os.path.exists(path_weight):
     # load the model and the pretrained weight from Torch Hub
-    model = hub_load("pytorch/vision:v0.10.0", "resnet152", pretrained=True)
+    model = hub_load("pytorch/vision:v0.10.0", "resnet152", weights=None)
 # if there is a weight folder
 else:
     # if there is no weight file in the weight folder
     if not len(os.listdir(path_weight)):
         # load the model and the pretrained weight from Torch Hub
-        model = hub_load("pytorch/vision:v0.10.0", "resnet152", pretrained=True)
+        model = hub_load("pytorch/vision:v0.10.0", "resnet152", weights=None)
     # if there is one or more weight files in the weight folder
     else:
         # load the ResNet 152 model from local
@@ -97,7 +97,7 @@ else:
         # search for the latest weight from local
         weight_latest = get_weight_latest(path_weight)
         # let state_dict load the latest weight from local
-        state_dict = load(path_project + weight_latest)
+        state_dict = load(path_weight + weight_latest)
         # let the ResNet 152 model load the state_dict
         model.load_state_dict(state_dict)
 
