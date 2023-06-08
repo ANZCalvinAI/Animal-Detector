@@ -84,13 +84,14 @@ else:
         model = hub_load("pytorch/vision:v0.10.0", "resnet152", pretrained=True)
     else:
         # if the weight path exist and there is one or more weight files
+        # load the ResNet 152 model
         model = resnet152(weights=None)
-        # load the latest weight file
+        # search for the latest weight
         weight_latest = get_weight_latest(path_weight)
-        missing_keys, unexpected_keys = model.load_state_dict(
-            load(path_weight + weight_latest),
-            strict=False
-        )
+        # let state_dict load the latest weight
+        state_dict = load(path_project + weight_latest)
+        # let the ResNet 152 model load the state_dict
+        model.load_state_dict(state_dict)
 
 print(f"ResNet model architecture\n{model}\n")
 
