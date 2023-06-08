@@ -80,16 +80,17 @@ set up the model as ResNet 152.
 download and use the pretrained weight if there is no existing weight in the weight path;
 otherwise use the most recently created weight in the weight path.
 """
-# if there is no weight path
+# if the weight folder has not been created
 if not os.path.exists(path_weight):
     # load the model and the pretrained weight from Torch Hub
     model = hub_load("pytorch/vision:v0.10.0", "resnet152", pretrained=True)
+# if there is a weight folder
 else:
-    # if there is a weight path but there is no weight file in the path
+    # if there is no weight file in the weight folder
     if not len(os.listdir(path_weight)):
         # load the model and the pretrained weight from Torch Hub
         model = hub_load("pytorch/vision:v0.10.0", "resnet152", pretrained=True)
-    # if there one or more weight files in an existing weight path
+    # if there is one or more weight files in the weight folder
     else:
         # load the ResNet 152 model
         model = resnet152(weights=None)
