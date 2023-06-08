@@ -17,7 +17,7 @@ from datetime import datetime
 path_project = "C:/Users/cz199/PycharmProjects/Animal-Detector/"
 
 # training parameters
-params = {
+params_training = {
     "batch_size": 16,  # training batch size
     "epochs_max": 3    # training maximal epochs
 }
@@ -48,7 +48,7 @@ with open("class_indices.json", "w") as json_file:
 
 train_loader = DataLoader(
     train_dataset,
-    batch_size=params["batch_size"],
+    batch_size=params_training["batch_size"],
     shuffle=True,
     num_workers=0
 )
@@ -60,7 +60,7 @@ val_dataset = ImageFolder(
 val_num = len(val_dataset)
 validate_loader = DataLoader(
     val_dataset,
-    batch_size=params["batch_size"],
+    batch_size=params_training["batch_size"],
     shuffle=False,
     num_workers=0
 )
@@ -92,11 +92,11 @@ else:
         model = hub_load("pytorch/vision:v0.10.0", "resnet152", pretrained=True)
     # if there is one or more weight files in the weight folder
     else:
-        # load the ResNet 152 model
+        # load the ResNet 152 model from local
         model = resnet152(weights=None)
-        # search for the latest weight
+        # search for the latest weight from local
         weight_latest = get_weight_latest(path_weight)
-        # let state_dict load the latest weight
+        # let state_dict load the latest weight from local
         state_dict = load(path_project + weight_latest)
         # let the ResNet 152 model load the state_dict
         model.load_state_dict(state_dict)
@@ -118,7 +118,7 @@ optimizer = Adam(model.parameters(), lr=0.0001)
 best_acc = 0.0
 
 # do the training
-for epoch in range(params["epochs_max"]):
+for epoch in range(params_training["epochs_max"]):
     model.train()
     running_loss = 0.0
     for step, data in enumerate(train_loader, start=0):
