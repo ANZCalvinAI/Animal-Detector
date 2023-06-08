@@ -89,8 +89,8 @@ else:
     if not len(os.listdir(path_weight)):
         # load the model and the pretrained weight from Torch Hub
         model = hub_load("pytorch/vision:v0.10.0", "resnet152", pretrained=True)
+    # if there one or more weight files in an existing weight path
     else:
-        # if there one or more weight files in an existing weight path
         # load the ResNet 152 model
         model = resnet152(weights=None)
         # search for the latest weight
@@ -102,11 +102,6 @@ else:
 
 print(f"ResNet model architecture\n{model}\n")
 
-"""
-set up the model weight to be trained as the latest created weight.
-the default weight has been renamed as "resnet152-19000101000000.pth".
-the default weight would be considered the latest weight, when there is no other weights.
-"""
 model.to(device)
 in_channel = model.fc.in_features
 model.fc = Linear(in_channel, 5)
