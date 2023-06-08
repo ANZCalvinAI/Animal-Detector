@@ -138,4 +138,4 @@ for epoch in range(params_training["epochs_max"]):
 
 # save the after training weight
 time = datetime.now().strftime("%Y%m%d%H%M%S")  # e.g. 2023-01-01 00:00:00 -> resnet152-20230101000000.pth
-save(path_weight, "resnet152-" + time + ".pth")
+save(model.state_dict(), path_weight + "resnet152-" + time + ".pth")
