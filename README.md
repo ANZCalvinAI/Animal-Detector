@@ -14,6 +14,8 @@ Fine tuned YOLOv5 Large + fine tuned ResNet 152
 ### 1.2 Models
 - Model Type: YOLOv5 Large
 - Model Path: "yolo/models/yolov5l.yaml"
+- Hyperparameter Configs: Scratch High
+- Hyperparameter Configs Path: "data/hyps/hyp.scratch-high.yaml"
 
 ### Document
 > Jocher G, Chaurasia A, Stoken A, Borovec J, Kwon Y, Michael K, Fang J, Yifu Z, Wong C, Montes D, Wang Z. Ultralytics/yolov5: v7. 0-YOLOv5 SotA realtime instance segmentation. Zenodo. 2022 Nov.
@@ -29,8 +31,8 @@ Fine tuned YOLOv5 Large + fine tuned ResNet 152
 
 ### 2.3 Weights
 - Weight Path: "resnet/weights/"
-- Weight Filename Format: "resnet-YYYYMMDDHHMMSS.pth". For example, the filename of a weight would be "resnet-20230101000000.pth" for a weight created at 2023-01-01 00:00:00.
-- Pretrained Weight Filename: "resnet-19000101000000.pth"
+- Weight Filename Format: "resnet152-YYYYMMDDHHMMSS.pth". For example, the filename of a weight would be "resnet-20230101000000.pth" for a weight created at 2023-01-01 00:00:00.
+- Pretrained Weight Filename: "resnet152-19000101000000.pth"
 
 ### 2.4 Training
 - Script Path: "resnet/train.py"
