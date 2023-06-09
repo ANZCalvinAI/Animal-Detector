@@ -3,7 +3,11 @@
 ![alt text](https://github.com/ANZCalvinAI/Animal-Detector/blob/main/Koalas.jpg?raw=true)
 
 ## 0. Architecture
-Fine tuned YOLOv5 Large + fine tuned ResNet 152
+### 0.1 Detection
+- Model: YOLO
+
+### 0.2 Classification
+- Model: ResNet
 
 ## 1. YOLO
 ### 1.1 Datasets
@@ -14,8 +18,8 @@ Fine tuned YOLOv5 Large + fine tuned ResNet 152
 ### 1.2 Models
 - Model Type: YOLOv5 Large
 - Model Path: "yolo/models/yolov5l.yaml"
-- Hyperparameter Configs: Scratch High
-- Hyperparameter Configs Path: "data/hyps/hyp.scratch-high.yaml"
+- Hyperparameter Config Type: Scratch High
+- Hyperparameter Config Path: "data/hyps/hyp.scratch-high.yaml"
 
 ### Document
 > Jocher G, Chaurasia A, Stoken A, Borovec J, Kwon Y, Michael K, Fang J, Yifu Z, Wong C, Montes D, Wang Z. Ultralytics/yolov5: v7. 0-YOLOv5 SotA realtime instance segmentation. Zenodo. 2022 Nov.
