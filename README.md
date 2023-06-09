@@ -10,7 +10,7 @@
 - Model: ResNet
 
 ## 1. YOLO
-### 1.1 Datasets
+### 1.1 Training Datasets
 - Dataset: iNaturalist 2017
 - Dataset Path: "datasets/iNat2017/"
 - Data Format Path: "yolo/data/inat2017.yaml" 
@@ -25,7 +25,7 @@
 > Jocher G, Chaurasia A, Stoken A, Borovec J, Kwon Y, Michael K, Fang J, Yifu Z, Wong C, Montes D, Wang Z. Ultralytics/yolov5: v7. 0-YOLOv5 SotA realtime instance segmentation. Zenodo. 2022 Nov.
 
 ## 2. ResNet
-### 2.1 Datasets
+### 2.1 Training Datasets
 - Dataset: iNaturalist 2021
 - Dataset Path: "datasets/iNat2021/"
 
@@ -35,7 +35,7 @@
 
 ### 2.3 Weights
 - Weight Path: "resnet/weights/"
-- Weight Filename Format: "resnet152-YYYYMMDDHHMMSS.pth". For example, the filename of a weight would be "resnet-20230101000000.pth" for a weight created at 2023-01-01 00:00:00.
+- Weight Filename Format: "resnet152-YYYYMMDDHHMMSS.pth". For example, the filename of a weight would be "resnet152-20230101000000.pth" for a weight created at 2023-01-01 00:00:00.
 - Pretrained Weight Filename: "resnet152-19000101000000.pth"
 
 ### 2.4 Training
