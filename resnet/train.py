@@ -6,6 +6,7 @@ from torch.utils.data import DataLoader
 from torch.optim import Adam
 from torch.hub import load as hub_load
 from model import resnet152
+# from torchvision.models.resnet import resnet152
 from torchvision.datasets import ImageFolder
 from utils import data_transform, get_weight_latest
 from datetime import datetime
@@ -125,6 +126,7 @@ for epoch in range(params_training["epochs_max"]):
     for step, data in enumerate(train_loader, start=0):
         images, labels = data
         optimizer.zero_grad()
+        model.to('cuda')    # added.
         logits = model(images.to(device))
         loss = loss_function(logits, labels.to(device))
         loss.backward()
