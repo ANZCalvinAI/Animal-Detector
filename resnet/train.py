@@ -14,7 +14,8 @@ from datetime import datetime
 # customise parameters
 # ====================
 # project path parameter
-path_project = "C:/Users/cz199/PycharmProjects/Animal-Detector/"
+# path_project = "C:/Users/cz199/PycharmProjects/Animal-Detector/"
+path_project = "/home/ubuntu/dpinsw/classification-resnet/Animal-Detector/"
 
 # training parameters
 params_training = {
