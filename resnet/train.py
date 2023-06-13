@@ -1,3 +1,4 @@
+from torch import device, cuda
 from torch import nn, optim
 from torch.utils.data import DataLoader
 from torchvision import transforms
@@ -76,6 +77,13 @@ print(f"train data size\n{train_data_size}\n")
 print(f"valid data size\n{valid_data_size}\n")
 print(f"test data size\n{test_data_size}\n")
 
+# =============
+# set up device
+# =============
+# set up the device as GPU as first choice and CPU as alternative
+device = device("cuda:0" if cuda.is_available() else "cpu")
+print(f"device\n{device}\n")
+
 # =================
 # Transfer Learning
 # =================
@@ -96,8 +104,12 @@ resnet152.fc = nn.Sequential(
     nn.LogSoftmax(dim=1)  # For using NLLLoss()
 )
 
+"""
+Original:
 # Convert model to be used on GPU
 resnet152 = resnet152.to('cuda:0')
+"""
+resnet152 = resnet152.to(device)
 
 # Define Optimizer and Loss Function
 loss_func = nn.NLLLoss()
@@ -143,3 +155,49 @@ for epoch in range(params["epochs_max"]):
                 Training: Loss: {:.4f},
                 Accuracy: {:.4f}".format(i, loss.item(), acc.item())
             )
+
+# ==========
+# Validation
+# ==========
+# Validation - No gradient tracking needed
+with torch.no_grad():
+    # Set to evaluation mode
+    model.eval()
+    # Validation loop
+    for j, (inputs, labels) in enumerate(valid_data_loader):
+        inputs = inputs.to(device)
+        labels = labels.to(device)
+        # Forward pass - compute outputs on input data using the model
+        outputs = model(inputs)
+        # Compute loss
+        loss = loss_criterion(outputs, labels)
+        # Compute the total loss for the batch and add it to valid_loss
+        valid_loss += loss.item() * inputs.size(0)
+        # Calculate validation accuracy
+        ret, predictions = torch.max(outputs.data, 1)
+        correct_counts = predictions.eq(labels.data.view_as(predictions))
+        # Convert correct_counts to float and then compute the mean
+        acc = torch.mean(correct_counts.type(torch.FloatTensor))
+        # Compute total accuracy in the whole batch and add to valid_acc
+        valid_acc += acc.item() * inputs.size(0)
+        print(
+            "Validation Batch number: {:03d},
+            Validation: Loss: {:.4f},
+            Accuracy: {:.4f}".format(j, loss.item(), acc.item())
+        )
+# Find average training loss and training accuracy
+avg_train_loss = train_loss / train_data_size 
+avg_train_acc = train_acc / float(train_data_size)
+# Find average training loss and training accuracy
+avg_valid_loss = valid_loss/valid_data_size 
+avg_valid_acc = valid_acc / float(valid_data_size)
+history.append([avg_train_loss, avg_valid_loss, avg_train_acc, avg_valid_acc])
+epoch_end = time.time()
+print(
+    "Epoch: {:03d},
+    Training: Loss: {:.4f},
+    Accuracy: {:.4f}%,
+    nttValidation: Loss: {:.4f},
+    Accuracy: {:.4f}%,
+    Time: {:.4f}s".format(epoch, avg_train_loss, avg_train_acc*100, avg_valid_loss, avg_valid_acc*100, epoch_end-epoch_start)
+)
