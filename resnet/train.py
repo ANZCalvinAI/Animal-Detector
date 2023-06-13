@@ -15,8 +15,8 @@ path_project = "/home/ubuntu/dpinsw/classification-resnet/Animal-Detector/"
 
 # training parameters
 params = {
-    "batch_size": 768,  # Training batch size
-    "epochs_max": 5    # Training maximal epochs
+    "batch_size": 64,  # Training batch size
+    "epochs_max": 1    # Training maximal epochs
 }
 
 # ===============
