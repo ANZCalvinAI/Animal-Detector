@@ -2,8 +2,7 @@ import os
 from torch import device, cuda
 from torch import nn, optim
 from torch.utils.data import DataLoader
-from torchvision import transforms
-from torchvision import models
+from torchvision import transforms, datasets, models
 from utils import get_weight_latest
 
 # ====================
@@ -36,8 +35,8 @@ image_transforms = {
         transforms.CenterCrop(size=224),
         transforms.ToTensor(),
         transforms.Normalize(
-            [0.485, 0.456, 0.406],
-            [0.229, 0.224, 0.225]
+            mean=[0.485, 0.456, 0.406],
+            std=[0.229, 0.224, 0.225]
         )
     ]),
     'valid': transforms.Compose([
@@ -45,8 +44,8 @@ image_transforms = {
         transforms.CenterCrop(size=224),
         transforms.ToTensor(),
         transforms.Normalize(
-            [0.485, 0.456, 0.406],
-            [0.229, 0.224, 0.225]
+            mean=[0.485, 0.456, 0.406],
+            std=[0.229, 0.224, 0.225]
         )
     ]),
     'test': transforms.Compose([
@@ -54,8 +53,8 @@ image_transforms = {
         transforms.CenterCrop(size=224),
         transforms.ToTensor(),
         transforms.Normalize(
-            [0.485, 0.456, 0.406],
-            [0.229, 0.224, 0.225]
+            mean=[0.485, 0.456, 0.406],
+            std=[0.229, 0.224, 0.225]
         )
     ])
 }
@@ -66,20 +65,24 @@ image_transforms = {
 # Set train and valid directory paths
 train_directory = 'train'
 valid_directory = 'test'
+
 # Load Data from folders
 data = {
     'train': datasets.ImageFolder(root=train_directory, transform=image_transforms['train']),
     'valid': datasets.ImageFolder(root=valid_directory, transform=image_transforms['valid']),
     'test': datasets.ImageFolder(root=test_directory, transform=image_transforms['test'])
 }
+
 # Size of Data, to be used for calculating Average Loss and Accuracy
 train_data_size = len(data['train'])
 valid_data_size = len(data['valid'])
 test_data_size = len(data['test'])
+
 # Create iterators for the Data loaded using DataLoader module
 train_data = DataLoader(data['train'], batch_size=params["batch_size"], shuffle=True)
 valid_data = DataLoader(data['valid'], batch_size=params["batch_size"], shuffle=True)
 test_data = DataLoader(data['test'], batch_size=params["batch_size"], shuffle=True)
+
 # Print the train, validation and test set data sizes
 print(f"train data size\n{train_data_size}\n")
 print(f"valid data size\n{valid_data_size}\n")
@@ -154,42 +157,42 @@ optimizer = optim.Adam(resnet152.parameters())
 epochs_max = params["epochs_max"]
 
 for epoch in range(epochs_max):
-        epoch_start = time.time()
-        print("Epoch: {}/{}".format(epoch + 1, epochs_max))
-        # Set to training mode
-        model.train()
-        # Loss and Accuracy within the epoch
-        train_loss = 0.0
-        train_acc = 0.0
-        valid_loss = 0.0
-        valid_acc = 0.0
-        for i, (inputs, labels) in enumerate(train_data_loader):
-            inputs = inputs.to(device)
-            labels = labels.to(device)
-            # Clean existing gradients
-            optimizer.zero_grad()
-            # Forward pass - compute outputs on input data using the model
-            outputs = model(inputs)
-            # Compute loss
-            loss = loss_criterion(outputs, labels)
-            # Backpropagate the gradients
-            loss.backward()
-            # Update the parameters
-            optimizer.step()
-            # Compute the total loss for the batch and add it to train_loss
-            train_loss += loss.item() * inputs.size(0)
-            # Compute the accuracy
-            ret, predictions = torch.max(outputs.data, 1)
-            correct_counts = predictions.eq(labels.data.view_as(predictions))
-            # Convert correct_counts to float and then compute the mean
-            acc = torch.mean(correct_counts.type(torch.FloatTensor))
-            # Compute total accuracy in the whole batch and add to train_acc
-            train_acc += acc.item() * inputs.size(0)
-            print(
-                "Batch number: {:03d},
-                Training: Loss: {:.4f},
-                Accuracy: {:.4f}".format(i, loss.item(), acc.item())
-            )
+    epoch_start = time.time()
+    print("Epoch: {}/{}".format(epoch + 1, epochs_max))
+    # Set to training mode
+    model.train()
+    # Loss and Accuracy within the epoch
+    train_loss = 0.0
+    train_acc = 0.0
+    valid_loss = 0.0
+    valid_acc = 0.0
+    for i, (inputs, labels) in enumerate(train_data_loader):
+        inputs = inputs.to(device)
+        labels = labels.to(device)
+        # Clean existing gradients
+        optimizer.zero_grad()
+        # Forward pass - compute outputs on input data using the model
+        outputs = model(inputs)
+        # Compute loss
+        loss = loss_criterion(outputs, labels)
+        # Backpropagate the gradients
+        loss.backward()
+        # Update the parameters
+        optimizer.step()
+        # Compute the total loss for the batch and add it to train_loss
+        train_loss += loss.item() * inputs.size(0)
+        # Compute the accuracy
+        ret, predictions = torch.max(outputs.data, 1)
+        correct_counts = predictions.eq(labels.data.view_as(predictions))
+        # Convert correct_counts to float and then compute the mean
+        acc = torch.mean(correct_counts.type(torch.FloatTensor))
+        # Compute total accuracy in the whole batch and add to train_acc
+        train_acc += acc.item() * inputs.size(0)
+        print("
+            Batch number: {:03d},
+            Training: Loss: {:.4f},
+            Accuracy: {:.4f}".format(i, loss.item(), acc.item())
+        )
 
 # ==========
 # Validation
@@ -215,21 +218,21 @@ with torch.no_grad():
         acc = torch.mean(correct_counts.type(torch.FloatTensor))
         # Compute total accuracy in the whole batch and add to valid_acc
         valid_acc += acc.item() * inputs.size(0)
-        print(
-            "Validation Batch number: {:03d},
+        print("
+            Validation Batch number: {:03d},
             Validation: Loss: {:.4f},
             Accuracy: {:.4f}".format(j, loss.item(), acc.item())
         )
+
 # Find average training loss and training accuracy
 avg_train_loss = train_loss / train_data_size 
 avg_train_acc = train_acc / float(train_data_size)
-# Find average training loss and training accuracy
-avg_valid_loss = valid_loss/valid_data_size 
-avg_valid_acc = valid_acc / float(valid_data_size)
+
 history.append([avg_train_loss, avg_valid_loss, avg_train_acc, avg_valid_acc])
 epoch_end = time.time()
-print(
-    "Epoch: {:03d},
+
+print("
+    Epoch: {:03d},
     Training: Loss: {:.4f},
     Accuracy: {:.4f}%,
     nttValidation: Loss: {:.4f},
