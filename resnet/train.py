@@ -1,10 +1,11 @@
 import os
 import torch
-from torch import device, cuda
-from torch import nn, optim
+from torch import device, cuda, nn, optim, save
 from torch.utils.data import DataLoader
 from torchvision import transforms, datasets, models
 from utils import get_weight_latest
+import time
+from datetime import datetime
 
 # ====================
 # customise parameters
@@ -18,11 +19,20 @@ params = {
     "epochs_max": 3    # Training maximal epochs
 }
 
+# ===============
+# path parameters
+# ===============
+path_weight = path_project + "resnet/weights/"
+path_dataset = path_project + "datasets/iNat2021/images/"
+path_train = path_dataset + "train/"
+path_valid = path_dataset + "val/"
+path_test = path_dataset + "test/"
+
 # =================
 # Data Augmentation
 # =================
 # Applying Transforms to the Data
-image_transforms = { 
+image_transforms = {
     'train': transforms.Compose([
         transforms.RandomResizedCrop(
             size=256,
@@ -60,15 +70,11 @@ image_transforms = {
 # ============
 # Data Loading
 # ============
-# Set train and valid directory paths
-train_directory = 'train'
-valid_directory = 'test'
-
 # Load Data from folders
 data = {
-    'train': datasets.ImageFolder(root=train_directory, transform=image_transforms['train']),
-    'valid': datasets.ImageFolder(root=valid_directory, transform=image_transforms['valid']),
-    'test': datasets.ImageFolder(root=test_directory, transform=image_transforms['test'])
+    'train': datasets.ImageFolder(root=path_train, transform=image_transforms['train']),
+    'valid': datasets.ImageFolder(root=path_valid, transform=image_transforms['valid']),
+    'test': datasets.ImageFolder(root=path_test, transform=image_transforms['test'])
 }
 
 # Size of Data, to be used for calculating Average Loss and Accuracy
@@ -121,13 +127,13 @@ else:
     # if there is one or more weight files in the weight folder
     else:
         # load the ResNet 152 model from local
-        model = resnet152(weights=None)
+        resnet152 = models.resnet152(weights=None)
         # search for the latest weight from local
         weight_latest = get_weight_latest(path_weight)
         # let state_dict load the latest weight from local
-        state_dict = load(path_weight + weight_latest)
+        state_dict = torch.load(path_weight + weight_latest)
         # let the ResNet 152 model load the state_dict
-        model.load_state_dict(state_dict)
+        resnet152.load_state_dict(state_dict)
 
 # Freeze model parameters
 for param in resnet152.parameters():
@@ -163,19 +169,22 @@ for epoch in range(epochs_max):
     epoch_start = time.time()
     print("Epoch: {}/{}".format(epoch + 1, epochs_max))
     # Set to training mode
-    model.train()
+    resnet152.train()
     # Loss and Accuracy within the epoch
     train_loss = 0.0
     train_acc = 0.0
     valid_loss = 0.0
     valid_acc = 0.0
-    for i, (inputs, labels) in enumerate(train_data_loader):
+
+    loss_criterion = nn.CrossEntropyLoss()
+
+    for i, (inputs, labels) in enumerate(train_data):
         inputs = inputs.to(device)
         labels = labels.to(device)
         # Clean existing gradients
         optimizer.zero_grad()
         # Forward pass - compute outputs on input data using the model
-        outputs = model(inputs)
+        outputs = resnet152(inputs)
         # Compute loss
         loss = loss_criterion(outputs, labels)
         # Backpropagate the gradients
@@ -191,25 +200,23 @@ for epoch in range(epochs_max):
         acc = torch.mean(correct_counts.type(torch.FloatTensor))
         # Compute total accuracy in the whole batch and add to train_acc
         train_acc += acc.item() * inputs.size(0)
-        print("
-            Batch number: {:03d},
-            Training: Loss: {:.4f},
-            Accuracy: {:.4f}".format(i, loss.item(), acc.item())
-        )
+        print("Batch number: {:03d}, Training: Loss: {:.4f}, Accuracy: {:.4f}".format(i, loss.item(), acc.item()))
 
 # ==========
 # Validation
 # ==========
 # Validation - No gradient tracking needed
+history = []
+
 with torch.no_grad():
     # Set to evaluation mode
-    model.eval()
+    resnet152.eval()
     # Validation loop
-    for j, (inputs, labels) in enumerate(valid_data_loader):
+    for j, (inputs, labels) in enumerate(valid_data):
         inputs = inputs.to(device)
         labels = labels.to(device)
         # Forward pass - compute outputs on input data using the model
-        outputs = model(inputs)
+        outputs = resnet152(inputs)
         # Compute loss
         loss = loss_criterion(outputs, labels)
         # Compute the total loss for the batch and add it to valid_loss
@@ -221,32 +228,28 @@ with torch.no_grad():
         acc = torch.mean(correct_counts.type(torch.FloatTensor))
         # Compute total accuracy in the whole batch and add to valid_acc
         valid_acc += acc.item() * inputs.size(0)
-        print("
-            Validation Batch number: {:03d},
-            Validation: Loss: {:.4f},
-            Accuracy: {:.4f}".format(j, loss.item(), acc.item())
-        )
+        printed = "Validation Batch number: {:03d}, Validation: Loss: {:.4f}, Accuracy: {:.4f}"
+        print(printed.format(j, loss.item(), acc.item()))
 
 # Find average training loss and training accuracy
-avg_train_loss = train_loss / train_data_size 
+avg_train_loss = train_loss / train_data_size
 avg_train_acc = train_acc / float(train_data_size)
 
 # Find average validation loss and validation accuracy
-avg_valid_loss = valid_loss/valid_data_size 
+avg_valid_loss = valid_loss/valid_data_size
 avg_valid_acc = valid_acc / float(valid_data_size)
 
 history.append([avg_train_loss, avg_valid_loss, avg_train_acc, avg_valid_acc])
 epoch_end = time.time()
 
-print("
-    Epoch: {:03d},
-    Training: Loss: {:.4f},
-    Accuracy: {:.4f}%,
-    nttValidation: Loss: {:.4f},
-    Accuracy: {:.4f}%,
-    Time: {:.4f}s".format(epoch, avg_train_loss, avg_train_acc * 100, avg_valid_loss, avg_valid_acc * 100, epoch_end - epoch_start)
+printed = "Epoch: {:03d}, Training: Loss: {:.4f}, Accuracy: {:.4f}%, nttValidation: Loss: {:.4f}, Accuracy: {:.4f}%," \
+          "Time: {:.4f}s"
+print(
+    printed.format(
+        epoch, avg_train_loss, avg_train_acc * 100, avg_valid_loss, avg_valid_acc * 100, epoch_end - epoch_start
+    )
 )
 
 # save the after training weight
 time = datetime.now().strftime("%Y%m%d%H%M%S")  # e.g. 2023-01-01 00:00:00 -> resnet152-20230101000000.pth
-save(model.state_dict(), path_weight + "resnet152-" + time + ".pth")
+save(resnet152.state_dict(), path_weight + "resnet152-" + time + ".pth")
