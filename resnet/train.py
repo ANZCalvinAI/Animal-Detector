@@ -1,3 +1,4 @@
+import os
 from torch import device, cuda
 from torch import nn, optim
 from torch.utils.data import DataLoader
@@ -7,10 +8,15 @@ from torchvision import models
 # ====================
 # customise parameters
 # ====================
+# project path parameter
+path_project = "C:/Users/cz199/PycharmProjects/Animal-Detector/"
+
+# data configs
+num_classes = 10
+
 params = {
-    "num_classes": 10,  # Number of classes
-    "bs": 32,           # Training batch size
-    "epochs_max": 3     # Training maximal epochs
+    "batch_size": 32,  # Training batch size
+    "epochs_max": 3    # Training maximal epochs
 }
 
 # =================
@@ -69,9 +75,9 @@ train_data_size = len(data['train'])
 valid_data_size = len(data['valid'])
 test_data_size = len(data['test'])
 # Create iterators for the Data loaded using DataLoader module
-train_data = DataLoader(data['train'], batch_size=params["bs"], shuffle=True)
-valid_data = DataLoader(data['valid'], batch_size=params["bs"], shuffle=True)
-test_data = DataLoader(data['test'], batch_size=params["bs"], shuffle=True)
+train_data = DataLoader(data['train'], batch_size=params["batch_size"], shuffle=True)
+valid_data = DataLoader(data['valid'], batch_size=params["batch_size"], shuffle=True)
+test_data = DataLoader(data['test'], batch_size=params["batch_size"], shuffle=True)
 # Print the train, validation and test set data sizes
 print(f"train data size\n{train_data_size}\n")
 print(f"valid data size\n{valid_data_size}\n")
@@ -87,8 +93,33 @@ print(f"device\n{device}\n")
 # =================
 # Transfer Learning
 # =================
+"""
+Original:
 # Load pretrained ResNet152 Model
-resnet152 = models.resnet152(weights=None)
+resnet152 = models.resnet152(pretrained=True)
+"""
+# if the weight folder has not been created
+if not os.path.exists(path_weight):
+    # create a weight folder, necessary for saving weights after training
+    os.mkdir(path_weight)
+    # load the model and the pretrained weight from Torch Hub
+    resnet152 = models.resnet152(weights=None)
+# if there is a weight folder
+else:
+    # if there is no weight file in the weight folder
+    if not len(os.listdir(path_weight)):
+        # load the model and the pretrained weight from Torch Hub
+        resnet152 = models.resnet152(weights=None)
+    # if there is one or more weight files in the weight folder
+    else:
+        # load the ResNet 152 model from local
+        model = resnet152(weights=None)
+        # search for the latest weight from local
+        weight_latest = get_weight_latest(path_weight)
+        # let state_dict load the latest weight from local
+        state_dict = load(path_weight + weight_latest)
+        # let the ResNet 152 model load the state_dict
+        model.load_state_dict(state_dict)
 
 # Freeze model parameters
 for param in resnet152.parameters():
@@ -100,7 +131,7 @@ resnet152.fc = nn.Sequential(
     nn.Linear(fc_inputs, 256),
     nn.ReLU(),
     nn.Dropout(0.4),
-    nn.Linear(256, params["num_classes"]),
+    nn.Linear(256, num_classes),
     nn.LogSoftmax(dim=1)  # For using NLLLoss()
 )
 
@@ -120,7 +151,7 @@ optimizer = optim.Adam(resnet152.parameters())
 # ========
 for epoch in range(params["epochs_max"]):
         epoch_start = time.time()
-        print("Epoch: {}/{}".format(epoch+1, epochs))
+        print("Epoch: {}/{}".format(epoch + 1, epochs))
         # Set to training mode
         model.train()
         # Loss and Accuracy within the epoch
@@ -199,5 +230,5 @@ print(
     Accuracy: {:.4f}%,
     nttValidation: Loss: {:.4f},
     Accuracy: {:.4f}%,
-    Time: {:.4f}s".format(epoch, avg_train_loss, avg_train_acc*100, avg_valid_loss, avg_valid_acc*100, epoch_end-epoch_start)
+    Time: {:.4f}s".format(epoch, avg_train_loss, avg_train_acc * 100, avg_valid_loss, avg_valid_acc * 100, epoch_end - epoch_start)
 )
