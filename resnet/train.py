@@ -16,7 +16,7 @@ path_project = "/home/ubuntu/dpinsw/classification-resnet/Animal-Detector/"
 # training parameters
 params = {
     "batch_size": 64,  # Training batch size
-    "epochs_max": 1    # Training maximal epochs
+    "epochs_max": 3    # Training maximal epochs
 }
 
 # ===============
@@ -84,9 +84,12 @@ test_data_size = len(data['test'])
 
 # Number of Classes
 num_classes = len(data['train'].class_to_idx)
+print(f"num_classes is {num_classes}.")
 
 # Create iterators for the Data loaded using DataLoader module
 batch_size = params["batch_size"]
+print(f"batch_size is {batch_size}.")
+
 
 train_data = DataLoader(data['train'], batch_size=batch_size, shuffle=True)
 valid_data = DataLoader(data['valid'], batch_size=batch_size, shuffle=True)
