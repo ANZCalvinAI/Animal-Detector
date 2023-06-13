@@ -1,4 +1,5 @@
 import os
+import torch
 from torch import device, cuda
 from torch import nn, optim
 from torch.utils.data import DataLoader
@@ -79,9 +80,11 @@ valid_data_size = len(data['valid'])
 test_data_size = len(data['test'])
 
 # Create iterators for the Data loaded using DataLoader module
-train_data = DataLoader(data['train'], batch_size=params["batch_size"], shuffle=True)
-valid_data = DataLoader(data['valid'], batch_size=params["batch_size"], shuffle=True)
-test_data = DataLoader(data['test'], batch_size=params["batch_size"], shuffle=True)
+batch_size = params["batch_size"]
+
+train_data = DataLoader(data['train'], batch_size=batch_size, shuffle=True)
+valid_data = DataLoader(data['valid'], batch_size=batch_size, shuffle=True)
+test_data = DataLoader(data['test'], batch_size=batch_size, shuffle=True)
 
 # Print the train, validation and test set data sizes
 print(f"train data size\n{train_data_size}\n")
