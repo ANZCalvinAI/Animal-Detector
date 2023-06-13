@@ -4,6 +4,7 @@ from torch import nn, optim
 from torch.utils.data import DataLoader
 from torchvision import transforms
 from torchvision import models
+from utils import get_weight_latest
 
 # ====================
 # customise parameters
@@ -14,6 +15,7 @@ path_project = "C:/Users/cz199/PycharmProjects/Animal-Detector/"
 # data configs
 num_classes = 10
 
+# training parameters
 params = {
     "batch_size": 32,  # Training batch size
     "epochs_max": 3    # Training maximal epochs
@@ -149,9 +151,11 @@ optimizer = optim.Adam(resnet152.parameters())
 # ========
 # Training
 # ========
-for epoch in range(params["epochs_max"]):
+epochs_max = params["epochs_max"]
+
+for epoch in range(epochs_max):
         epoch_start = time.time()
-        print("Epoch: {}/{}".format(epoch + 1, epochs))
+        print("Epoch: {}/{}".format(epoch + 1, epochs_max))
         # Set to training mode
         model.train()
         # Loss and Accuracy within the epoch
@@ -232,3 +236,7 @@ print(
     Accuracy: {:.4f}%,
     Time: {:.4f}s".format(epoch, avg_train_loss, avg_train_acc * 100, avg_valid_loss, avg_valid_acc * 100, epoch_end - epoch_start)
 )
+
+# save the after training weight
+time = datetime.now().strftime("%Y%m%d%H%M%S")  # e.g. 2023-01-01 00:00:00 -> resnet152-20230101000000.pth
+save(model.state_dict(), path_weight + "resnet152-" + time + ".pth")
