@@ -15,8 +15,8 @@ path_project = "/home/ubuntu/dpinsw/classification-resnet/Animal-Detector/"
 
 # training parameters
 params = {
-    "batch_size": 32,  # Training batch size
-    "epochs_max": 3    # Training maximal epochs
+    "batch_size": 768,  # Training batch size
+    "epochs_max": 5    # Training maximal epochs
 }
 
 # ===============
@@ -137,7 +137,7 @@ else:
 
 # Freeze model parameters
 for param in resnet152.parameters():
-    param.requires_grad = False
+    param.requires_grad = True
 
 # Change the final layer of ResNet152 Model for Transfer Learning
 fc_inputs = resnet152.fc.in_features
