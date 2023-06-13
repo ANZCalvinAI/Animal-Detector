@@ -15,8 +15,8 @@ path_project = "/home/ubuntu/dpinsw/classification-resnet/Animal-Detector/"
 
 # training parameters
 params = {
-    "batch_size": 64,  # Training batch size
-    "epochs_max": 3    # Training maximal epochs
+    "batch_size": 256,  # Training batch size
+    "epochs_max": 1     # Training maximal epochs
 }
 
 # ===============
@@ -157,6 +157,13 @@ Original:
 # Convert model to be used on GPU
 resnet152 = resnet152.to('cuda:0')
 """
+gpu_count = torch.cuda.device_count()
+if gpu_count > 1:
+    gpu_ids = [x for x in range(gpu_count)]
+    resnet152 = nn.DataParallel(resnet152, device_ids=gpu_ids)
+else:
+    resnet152 = nn.DataParallel(resnet152)
+
 resnet152 = resnet152.to(device)
 
 # Define Optimizer and Loss Function
