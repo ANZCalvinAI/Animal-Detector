@@ -1,0 +1,1 @@
+find train-2/ -name '*_Insecta_*' -exec mv -t train {} +
