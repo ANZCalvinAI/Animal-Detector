@@ -1,6 +1,7 @@
-from torchvision import transforms
+from torch import nn, optim
 from torch.utils.data import DataLoader
-from torchvision.models import resnet152
+from torchvision import transforms
+from torchvision import models
 
 # ====================
 # customise parameters
@@ -8,6 +9,7 @@ from torchvision.models import resnet152
 params = {
     "num_classes": 10,  # Number of classes
     "bs": 32,           # Training batch size
+    "epochs_max": 3     # Training maximal epochs
 }
 
 # =================
@@ -77,7 +79,7 @@ print(f"test data size\n{test_data_size}\n")
 # =================
 # Transfer Learning
 # =================
-# Load pretrained ResNet50 Model
+# Load pretrained ResNet152 Model
 resnet152 = models.resnet152(weights=None)
 
 # Freeze model parameters
@@ -93,3 +95,51 @@ resnet152.fc = nn.Sequential(
     nn.Linear(256, params["num_classes"]),
     nn.LogSoftmax(dim=1)  # For using NLLLoss()
 )
+
+# Convert model to be used on GPU
+resnet152 = resnet152.to('cuda:0')
+
+# Define Optimizer and Loss Function
+loss_func = nn.NLLLoss()
+optimizer = optim.Adam(resnet152.parameters())
+
+# ========
+# Training
+# ========
+for epoch in range(params["epochs_max"]):
+        epoch_start = time.time()
+        print("Epoch: {}/{}".format(epoch+1, epochs))
+        # Set to training mode
+        model.train()
+        # Loss and Accuracy within the epoch
+        train_loss = 0.0
+        train_acc = 0.0
+        valid_loss = 0.0
+        valid_acc = 0.0
+        for i, (inputs, labels) in enumerate(train_data_loader):
+            inputs = inputs.to(device)
+            labels = labels.to(device)
+            # Clean existing gradients
+            optimizer.zero_grad()
+            # Forward pass - compute outputs on input data using the model
+            outputs = model(inputs)
+            # Compute loss
+            loss = loss_criterion(outputs, labels)
+            # Backpropagate the gradients
+            loss.backward()
+            # Update the parameters
+            optimizer.step()
+            # Compute the total loss for the batch and add it to train_loss
+            train_loss += loss.item() * inputs.size(0)
+            # Compute the accuracy
+            ret, predictions = torch.max(outputs.data, 1)
+            correct_counts = predictions.eq(labels.data.view_as(predictions))
+            # Convert correct_counts to float and then compute the mean
+            acc = torch.mean(correct_counts.type(torch.FloatTensor))
+            # Compute total accuracy in the whole batch and add to train_acc
+            train_acc += acc.item() * inputs.size(0)
+            print(
+                "Batch number: {:03d},
+                Training: Loss: {:.4f},
+                Accuracy: {:.4f}".format(i, loss.item(), acc.item())
+            )
