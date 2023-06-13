@@ -12,9 +12,6 @@ from utils import get_weight_latest
 # project path parameter
 path_project = "C:/Users/cz199/PycharmProjects/Animal-Detector/"
 
-# data configs
-num_classes = 10
-
 # training parameters
 params = {
     "batch_size": 32,  # Training batch size
@@ -78,6 +75,9 @@ data = {
 train_data_size = len(data['train'])
 valid_data_size = len(data['valid'])
 test_data_size = len(data['test'])
+
+# Number of Classes
+num_classes = len(data['train'].class_to_idx)
 
 # Create iterators for the Data loaded using DataLoader module
 batch_size = params["batch_size"]
