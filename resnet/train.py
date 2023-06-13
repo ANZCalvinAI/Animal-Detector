@@ -228,6 +228,10 @@ with torch.no_grad():
 avg_train_loss = train_loss / train_data_size 
 avg_train_acc = train_acc / float(train_data_size)
 
+# Find average validation loss and validation accuracy
+avg_valid_loss = valid_loss/valid_data_size 
+avg_valid_acc = valid_acc / float(valid_data_size)
+
 history.append([avg_train_loss, avg_valid_loss, avg_train_acc, avg_valid_acc])
 epoch_end = time.time()
 
