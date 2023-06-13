@@ -1,3 +1,18 @@
+from torchvision import transforms
+from torch.utils.data import DataLoader
+from torchvision.models import resnet152
+
+# ====================
+# customise parameters
+# ====================
+params = {
+    "num_classes": 10,  # Number of classes
+    "bs": 32,           # Training batch size
+}
+
+# =================
+# Data Augmentation
+# =================
 # Applying Transforms to the Data
 image_transforms = { 
     'train': transforms.Compose([
@@ -34,14 +49,12 @@ image_transforms = {
     ])
 }
 
-# Load the Data
+# ============
+# Data Loading
+# ============
 # Set train and valid directory paths
 train_directory = 'train'
 valid_directory = 'test'
-# Batch size
-bs = 32
-# Number of classes
-num_classes = 10
 # Load Data from folders
 data = {
     'train': datasets.ImageFolder(root=train_directory, transform=image_transforms['train']),
@@ -53,8 +66,30 @@ train_data_size = len(data['train'])
 valid_data_size = len(data['valid'])
 test_data_size = len(data['test'])
 # Create iterators for the Data loaded using DataLoader module
-train_data = DataLoader(data['train'], batch_size=bs, shuffle=True)
-valid_data = DataLoader(data['valid'], batch_size=bs, shuffle=True)
-test_data = DataLoader(data['test'], batch_size=bs, shuffle=True)
+train_data = DataLoader(data['train'], batch_size=params["bs"], shuffle=True)
+valid_data = DataLoader(data['valid'], batch_size=params["bs"], shuffle=True)
+test_data = DataLoader(data['test'], batch_size=params["bs"], shuffle=True)
 # Print the train, validation and test set data sizes
-train_data_size, valid_data_size, test_data_size
+print(f"train data size\n{train_data_size}\n")
+print(f"valid data size\n{valid_data_size}\n")
+print(f"test data size\n{test_data_size}\n")
+
+# =================
+# Transfer Learning
+# =================
+# Load pretrained ResNet50 Model
+resnet152 = models.resnet152(weights=None)
+
+# Freeze model parameters
+for param in resnet152.parameters():
+    param.requires_grad = False
+
+# Change the final layer of ResNet152 Model for Transfer Learning
+fc_inputs = resnet152.fc.in_features
+resnet152.fc = nn.Sequential(
+    nn.Linear(fc_inputs, 256),
+    nn.ReLU(),
+    nn.Dropout(0.4),
+    nn.Linear(256, params["num_classes"]),
+    nn.LogSoftmax(dim=1)  # For using NLLLoss()
+)
