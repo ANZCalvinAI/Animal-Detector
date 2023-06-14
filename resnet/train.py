@@ -107,33 +107,7 @@ print(f"device\n{device}\n")
 # =================
 # Transfer Learning
 # =================
-"""
-Original:
-# Load pretrained ResNet152 Model
-resnet152 = models.resnet152(pretrained=True)
-"""
-# if the weight folder has not been created
-if not os.path.exists(path_weight):
-    # create a weight folder, necessary for saving weights after training
-    os.mkdir(path_weight)
-    # load the model and the pretrained weight from Torch Hub
-    resnet152 = models.resnet152(weights=None)
-# if there is a weight folder
-else:
-    # if there is no weight file in the weight folder
-    if not len(os.listdir(path_weight)):
-        # load the model and the pretrained weight from Torch Hub
-        resnet152 = models.resnet152(weights=None)
-    # if there is one or more weight files in the weight folder
-    else:
-        # load the ResNet 152 model from local
-        resnet152 = models.resnet152(weights=None)
-        # search for the latest weight from local
-        weight_latest = get_weight_latest(path_weight)
-        # let state_dict load the latest weight from local
-        state_dict = torch.load(path_weight + weight_latest)
-        # let the ResNet 152 model load the state_dict
-        resnet152.load_state_dict(state_dict)
+resnet152 = models.resnet152(weights=None)
 
 # Freeze model parameters
 for param in resnet152.parameters():
@@ -148,6 +122,14 @@ resnet152.fc = nn.Sequential(
     nn.Linear(256, num_classes),
     nn.LogSoftmax(dim=1)  # For using NLLLoss()
 )
+
+if not os.path.exists(path_weight):
+    os.mkdir(path_weight)
+else:
+    if len(os.listdir(path_weight)) >= 1:
+        weight_latest = get_weight_latest(path_weight)
+        state_dict = torch.load(path_weight + weight_latest)
+        resnet152.load_state_dict(state_dict)
 
 """
 Original:
