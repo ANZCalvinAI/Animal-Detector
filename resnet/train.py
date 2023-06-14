@@ -15,8 +15,8 @@ path_project = "/home/ubuntu/dpinsw/classification-resnet/Animal-Detector/"
 
 # training parameters
 params = {
-    "batch_size": 384,  # Training batch size
-    "epochs_max": 2     # Training maximal epochs
+    "batch_size": 512,  # Training batch size
+    "epochs_max": 3     # Training maximal epochs
 }
 
 # ===============
@@ -113,38 +113,38 @@ print(f"device\n{device}\n")
 """
 Original:
 # Load pretrained ResNet152 Model
-resnet101 = models.resnet101(pretrained=True)
+resnet50 = models.resnet50(pretrained=True)
 """
 # if the weight folder has not been created
 if not os.path.exists(path_weight):
     # create a weight folder, necessary for saving weights after training
     os.mkdir(path_weight)
     # load the model and the pretrained weight from Torch Hub
-    resnet101 = models.resnet101(weights=None)
+    resnet50 = models.resnet50(weights=None)
 # if there is a weight folder
 else:
     # if there is no weight file in the weight folder
     if not len(os.listdir(path_weight)):
         # load the model and the pretrained weight from Torch Hub
-        resnet101 = models.resnet101(weights=None)
+        resnet50 = models.resnet50(weights=None)
     # if there is one or more weight files in the weight folder
     else:
         # load the ResNet 152 model from local
-        resnet101 = models.resnet101(weights=None)
+        resnet50 = models.resnet50(weights=None)
         # search for the latest weight from local
         weight_latest = get_weight_latest(path_weight)
         # let state_dict load the latest weight from local
         state_dict = torch.load(path_weight + weight_latest)
         # let the ResNet 152 model load the state_dict
-        resnet101.load_state_dict(state_dict)
+        resnet50.load_state_dict(state_dict)
 
 # Freeze model parameters
-for param in resnet101.parameters():
+for param in resnet50.parameters():
     param.requires_grad = True
 
 # Change the final layer of ResNet152 Model for Transfer Learning
-fc_inputs = resnet101.fc.in_features
-resnet101.fc = nn.Sequential(
+fc_inputs = resnet50.fc.in_features
+resnet50.fc = nn.Sequential(
     nn.Linear(fc_inputs, 256),
     nn.ReLU(),
     nn.Dropout(0.4),
@@ -155,20 +155,20 @@ resnet101.fc = nn.Sequential(
 """
 Original:
 # Convert model to be used on GPU
-resnet101 = resnet101.to('cuda:0')
+resnet50 = resnet50.to('cuda:0')
 """
 gpu_count = torch.cuda.device_count()
 if gpu_count > 1:
     gpu_ids = [x for x in range(gpu_count)]
-    resnet101 = nn.DataParallel(resnet101, device_ids=gpu_ids)
+    resnet50 = nn.DataParallel(resnet50, device_ids=gpu_ids)
 else:
-    resnet101 = nn.DataParallel(resnet101)
+    resnet50 = nn.DataParallel(resnet50)
 
-resnet101 = resnet101.to(device)
+resnet50 = resnet50.to(device)
 
 # Define Optimizer and Loss Function
 loss_func = nn.NLLLoss()
-optimizer = optim.Adam(resnet101.parameters())
+optimizer = optim.Adam(resnet50.parameters())
 
 # ========
 # Training
@@ -179,7 +179,7 @@ for epoch in range(epochs_max):
     epoch_start = time.time()
     print("Epoch: {}/{}".format(epoch + 1, epochs_max))
     # Set to training mode
-    resnet101.train()
+    resnet50.train()
     # Loss and Accuracy within the epoch
     train_loss = 0.0
     train_acc = 0.0
@@ -194,7 +194,7 @@ for epoch in range(epochs_max):
         # Clean existing gradients
         optimizer.zero_grad()
         # Forward pass - compute outputs on input data using the model
-        outputs = resnet101(inputs)
+        outputs = resnet50(inputs)
         # Compute loss
         loss = loss_criterion(outputs, labels)
         # Backpropagate the gradients
@@ -220,13 +220,13 @@ history = []
 
 with torch.no_grad():
     # Set to evaluation mode
-    resnet101.eval()
+    resnet50.eval()
     # Validation loop
     for j, (inputs, labels) in enumerate(valid_data):
         inputs = inputs.to(device)
         labels = labels.to(device)
         # Forward pass - compute outputs on input data using the model
-        outputs = resnet101(inputs)
+        outputs = resnet50(inputs)
         # Compute loss
         loss = loss_criterion(outputs, labels)
         # Compute the total loss for the batch and add it to valid_loss
@@ -261,5 +261,5 @@ print(
 )
 
 # save the after training weight
-time = datetime.now().strftime("%Y%m%d%H%M%S")  # e.g. 2023-01-01 00:00:00 -> resnet101-20230101000000.pth
-save(resnet101.state_dict(), path_weight + "resnet101-" + time + ".pth")
+time = datetime.now().strftime("%Y%m%d%H%M%S")  # e.g. 2023-01-01 00:00:00 -> resnet50-20230101000000.pth
+save(resnet50.state_dict(), path_weight + "resnet50-" + time + ".pth")
