@@ -183,10 +183,6 @@ for epoch in range(epochs_max):
         # Compute total accuracy in the whole batch and add to train_acc
         train_acc += acc.item() * inputs.size(0)
         print("Batch number: {:03d}, Training: Loss: {:.4f}, Accuracy: {:.4f}".format(i, loss.item(), acc.item()))
-
-# save the after training weight
-time = datetime.now().strftime("%Y%m%d%H%M%S")  # e.g. 2023-01-01 00:00:00 -> resnet152-20230101000000.pth
-save(resnet152.state_dict(), path_weight + "resnet152-" + time + ".pth")        
         
 # ==========
 # Validation
@@ -235,3 +231,7 @@ print(
         epoch, avg_train_loss, avg_train_acc * 100, avg_valid_loss, avg_valid_acc * 100, epoch_end - epoch_start
     )
 )
+
+# save the after training weight
+time = datetime.now().strftime("%Y%m%d%H%M%S")  # e.g. 2023-01-01 00:00:00 -> resnet152-20230101000000.pth
+save(resnet152.state_dict(), path_weight + "resnet152-" + time + ".pth")        
