@@ -8,7 +8,7 @@ Output:
     ResNet Predicted Class
 
 1. # detect objects from an image.
-   out_detect = yolov5(image);
+   `out_detect = yolov5(image)`;
 
 # by the way, out_detect should be like:
 # [
