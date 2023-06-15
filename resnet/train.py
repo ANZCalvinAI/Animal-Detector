@@ -110,39 +110,13 @@ print(f"device\n{device}\n")
 # =================
 # Transfer Learning
 # =================
-"""
-Original:
-# Load pretrained ResNet152 Model
-resnet50 = models.resnet50(pretrained=True)
-"""
-# if the weight folder has not been created
-if not os.path.exists(path_weight):
-    # create a weight folder, necessary for saving weights after training
-    os.mkdir(path_weight)
-    # load the model and the pretrained weight from Torch Hub
-    resnet50 = models.resnet50(weights=None)
-# if there is a weight folder
-else:
-    # if there is no weight file in the weight folder
-    if not len(os.listdir(path_weight)):
-        # load the model and the pretrained weight from Torch Hub
-        resnet50 = models.resnet50(weights=None)
-    # if there is one or more weight files in the weight folder
-    else:
-        # load the ResNet 152 model from local
-        resnet50 = models.resnet50(weights=None)
-        # search for the latest weight from local
-        weight_latest = get_weight_latest(path_weight)
-        # let state_dict load the latest weight from local
-        state_dict = torch.load(path_weight + weight_latest)
-        # let the ResNet 152 model load the state_dict
-        resnet50.load_state_dict(state_dict)
+resnet50 = models.resnet50(weights=None)
 
 # Freeze model parameters
 for param in resnet50.parameters():
     param.requires_grad = True
 
-# Change the final layer of ResNet152 Model for Transfer Learning
+# Change the final layer of resnet50 Model for Transfer Learning
 fc_inputs = resnet50.fc.in_features
 resnet50.fc = nn.Sequential(
     nn.Linear(fc_inputs, 256),
@@ -151,6 +125,14 @@ resnet50.fc = nn.Sequential(
     nn.Linear(256, num_classes),
     nn.LogSoftmax(dim=1)  # For using NLLLoss()
 )
+
+if not os.path.exists(path_weight):
+    os.mkdir(path_weight)
+else:
+    if len(os.listdir(path_weight)) >= 1:
+        weight_latest = get_weight_latest(path_weight)
+        state_dict = torch.load(path_weight + weight_latest)
+        resnet50.load_state_dict(state_dict)
 
 """
 Original:
@@ -211,7 +193,7 @@ for epoch in range(epochs_max):
         # Compute total accuracy in the whole batch and add to train_acc
         train_acc += acc.item() * inputs.size(0)
         print("Batch number: {:03d}, Training: Loss: {:.4f}, Accuracy: {:.4f}".format(i, loss.item(), acc.item()))
-
+        
 # ==========
 # Validation
 # ==========
@@ -262,4 +244,4 @@ print(
 
 # save the after training weight
 time = datetime.now().strftime("%Y%m%d%H%M%S")  # e.g. 2023-01-01 00:00:00 -> resnet50-20230101000000.pth
-save(resnet50.state_dict(), path_weight + "resnet50-" + time + ".pth")
+save(resnet50.state_dict(), path_weight + "resnet50-" + time + ".pth")        
