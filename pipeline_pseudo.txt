@@ -7,16 +7,27 @@ Input:
 Output:
     ResNet Predicted Class
 
-1. Detect objects from an image, i.e. out_detect = yolov5(image);
+1. # detect objects from an image.
+   out_detect = yolov5(image);
 
-By the way, out_detect is like: [
-    [obj1_class_index, obj1_x_centre, obj1_y_centre, obj1_width, obj1_height],  # for detected object 1
-    ...,
-    [objN_class_index, objN_x_centre, objN_y_centre, objN_width, obj1_height]   # for detected object N
-]
+# by the way, out_detect should be like:
+# [
+#     [1_class_index, 1_x_centre, 1_y_centre, 1_width, 1_height],  # for detected object 1
+#     ...,
+#     [N_class_index, N_x_centre, N_y_centre, N_width, N_height]   # for detected object N
+# ]
 
-2. Find the insect object from the detected object(s), i.e. out_detect = out_detect(obj_class_index == insect_class_index); 
+2. # find the insect object from the detected object(s).
+   for class_index in [1_class_index, ..., N_class_index]:
+       if class_index == insect_class_index:
+           return()
+           
+   for object in out_detect:
+       if object[1] == insect_class_index:
+           return object
 
-3. Input the insect object to the ResNet model, classifying it, i.e. out_classify = resnet(out_detect).
+3. # input the insect object to the ResNet model, classifying it.
+   out_classify = resnet(object).
 
-4. return the result, i.e. return out_classify
+4. # return the ResNet classification result.
+   return out_classify
