@@ -17,7 +17,7 @@ These are details for to-do list.
 - [x] Yolov5 detection model by Pytorch is ready.
   - [ ] Yolov8 or other recent better detection models as candidates. **
 
-- [ ] OpenCV DNN code loads the Yolov5 model for inference/prediction.
+- [x] OpenCV DNN code loads the Yolov5 model for inference/prediction.
 
 
 
