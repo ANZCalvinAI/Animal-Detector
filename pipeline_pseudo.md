@@ -33,12 +33,12 @@ for object in object_list:
         return object
 ```
 
-3. input the insect object to the ResNet model, classifying it.
+### 3. input the insect object to the ResNet model, classifying it.
 ```
 out_classify = resnet(object)
 ```
 
-4. return the ResNet classification result.
+### 4. return the ResNet classification result.
 ```
 return out_classify
 ```
