@@ -23,7 +23,7 @@ These are details for to-do list.
 
 #### Classification
 
-- [ ] Create scripts for iNat2021 dataset analysis.
+- [x] Create scripts for iNat2021 dataset analysis - docs/species.md
 - [ ] Split date of Insect (Insecta) and Bird (Ave) for 2-stage inference.
 - [ ] Load Yolov5 to generate Roi smaller training images for classification.
 - [ ] Split into 5 training datasets for 2700 species of insect.
