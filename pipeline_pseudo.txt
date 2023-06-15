@@ -18,10 +18,6 @@ Output:
 # ]
 
 2. # find the insect object from the detected object(s).
-   for class_index in [1_class_index, ..., N_class_index]:
-       if class_index == insect_class_index:
-           return()
-           
    for object in out_detect:
        if object[1] == insect_class_index:
            return object
