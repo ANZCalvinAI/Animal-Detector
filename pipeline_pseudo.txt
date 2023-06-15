@@ -1,16 +1,22 @@
 Algorithm: YOLO-ResNet Pipeline (e.g. for Insects)
-Input: Image: Data, Class Index of Insects: Int, YOLOv5: Model, ResNet: Model
-Output: ResNet Predicted Class
+Input:
+    image: Data,
+    insect_class_index: Int,
+    yolov5: Model with Fine Tuned Weights,
+    resnet: Model with Fine Tuned Weights
+Output:
+    ResNet Predicted Class
 
-1. Detection Objects = YOLOv5(Image)
+1. Detect objects from an image, i.e. out_detect = yolov5(image);
 
-e.g. Detection Output should be like
-[
-    [class_index_1, x_centre_1, y_centre_1, width_1, height_1],  # for detected object 1
+By the way, out_detect is like: [
+    [obj1_class_index, obj1_x_centre, obj1_y_centre, obj1_width, obj1_height],  # for detected object 1
     ...,
-    [class_index_N, x_centre_N, y_centre_N, width_N, height_N]   # for detected object N
-] = 
+    [objN_class_index, objN_x_centre, objN_y_centre, objN_width, obj1_height]   # for detected object N
+]
 
-2. Insect = Detection Objects(
-    Detection Objects[?:?, ..., ?:?] == Class Index of Insects
-)
+2. Find the insect object from the detected object(s), i.e. out_detect = out_detect(obj_class_index == insect_class_index); 
+
+3. Input the insect object to the ResNet model, classifying it, i.e. out_classify = resnet(out_detect).
+
+4. return the result, i.e. return out_classify
