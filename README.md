@@ -1,6 +1,6 @@
 # Animal-Detector
 
-![alt text](https://github.com/ANZCalvinAI/Animal-Detector/blob/main/imgs/Koalas.jpg?raw=true)
+![alt text](./imgs/Koalas.jpg?raw=true)
 
 ## 0. Architecture
 ### 0.1 Detection
