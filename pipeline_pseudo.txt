@@ -1,0 +1,16 @@
+Algorithm: YOLO-ResNet Pipeline (e.g. for Insects)
+Input: Image: Data, Class Index of Insects: Int, YOLOv5: Model, ResNet: Model
+Output: ResNet Predicted Class
+
+1. Detection Objects = YOLOv5(Image)
+
+e.g. Detection Output should be like
+[
+    [class_index_1, x_centre_1, y_centre_1, width_1, height_1],  # for detected object 1
+    ...,
+    [class_index_N, x_centre_N, y_centre_N, width_N, height_N]   # for detected object N
+] = 
+
+2. Insect = Detection Objects(
+    Detection Objects[?:?, ..., ?:?] == Class Index of Insects
+)
