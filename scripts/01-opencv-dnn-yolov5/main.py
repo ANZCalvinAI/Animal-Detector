@@ -9,7 +9,7 @@ from yolov5 import (
 )
 
 const_classesFile = "models/labels.txt"
-const_modelWeights = "models/yolov5l.onnx"
+const_modelWeights = "models/yolov5x.onnx"
 const_test_img_path = "imgs/1.jpg"
 
 
