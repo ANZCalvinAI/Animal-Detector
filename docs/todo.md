@@ -27,7 +27,8 @@ These are details for to-do list.
 - [ ] Validate classification models.
   - [x] Validate ResNet101 for 500 classes.
   - [ ] Validate ResNet101 for 500 classes based on roi images.
-
+  - [ ] Validate ConvNeXt for 500 classes.
+  
 - [ ] Validate detection models for 500 classes.
   - [ ] Validate Yolov5 for 500 classes.
 
