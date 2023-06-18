@@ -1,12 +1,22 @@
 
 
+The command to generate a child dataset.
+
+```shell
+find ./iNat2021/images/train -name "Odonata" | xargs -i cp {} -r ./demo2/images/train
+find ./iNat2021/images/val -name "Odonata" | xargs -i cp {} -r ./demo2/images/val
+find ./iNat2021/images/test -name "Odonata" | xargs -i cp {} -r ./demo2/images/test
+
+find ./iNat2021/images/train -name "Coleoptera" | xargs -i cp {} -r ./demo2/images/train
+find ./iNat2021/images/val -name "Coleoptera" | xargs -i cp {} -r ./demo2/images/val
+find ./iNat2021/images/test -name "Coleoptera" | xargs -i cp {} -r ./demo2/images/test
+```
+
 
 
 ```python
 `{'Lepidoptera': 1430, 'Odonata': 291, 'Hymenoptera': 177, 'Orthoptera': 98, 'Hemiptera': 164, 'Coleoptera': 236, 'Diptera': 85, 'Mantodea': 14, 'Neuroptera': 7, 'Megaloptera': 3, 'Blattodea': 8, 'Zygentoma': 3, 'Phasmida': 4, 'Dermaptera': 2, 'Mecoptera': 2, 'Ephemeroptera': 1, 'Psocodea': 1}`
 ```
-
-
 
 
 

@@ -24,6 +24,13 @@ These are details for to-do list.
 #### Classification
 
 - [x] Create scripts for iNat2021 dataset analysis - docs/species.md
+- [ ] Validate classification models.
+  - [x] Validate ResNet101 for 500 classes.
+  - [ ] Validate ResNet101 for 500 classes based on roi images.
+
+- [ ] Validate detection models for 500 classes.
+  - [ ] Validate Yolov5 for 500 classes.
+
 - [ ] Split date of Insect (Insecta) and Bird (Ave) for 2-stage inference.
 - [ ] Load Yolov5 to generate Roi smaller training images for classification.
 - [ ] Split into 5 training datasets for 2700 species of insect.
