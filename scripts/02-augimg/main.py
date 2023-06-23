@@ -24,6 +24,10 @@ def load_deepLearning():
 
     return net, classes
 
+def extract_label(species_folder_name):
+
+    return species_folder_name
+
 
 if __name__ == '__main__':
     '''
@@ -46,5 +50,12 @@ if __name__ == '__main__':
 
             print(f"\n\tLoad image: {image_path}")
             img = cv2.imread(image_path)
-            out = fnGenerate_augimg(img, net, classes)
+            # gt = extract_label(k_label)
+            gt = "Insecta"
+            aug_output = fnGenerate_augimg(img, net, classes, gt)
+            print("\t[augment] Generate {} more.".format(len(aug_output)))
+
+
+
+
 

@@ -182,7 +182,16 @@ def fnGet_detected_roiImage(img, each_result, larger_ratio=0.1):
     return out
 
 
-def fnGenerate_augimg(frame, net, classes):
+def is_same_label(s, gt):
+
+    if gt.find(s) < 0:
+        return False
+
+    print(f"\tFind {s} in {gt}")
+    return True
+
+
+def fnGenerate_augimg(frame, net, classes, gt):
 
     # Process image.
     detections = pre_process(frame, net)
@@ -198,23 +207,32 @@ def fnGenerate_augimg(frame, net, classes):
         class_id = each_result['class_id']
         confidence = each_result['confidence']
 
-        label1 = "\t\t{}: {:.2f}".format(classes[class_id], confidence)
+        class_name = classes[class_id]
+        label1 = "\t\t{}: {:.2f}".format(class_name, confidence)
         print(label1)
 
         t, _ = net.getPerfProfile()
         label2 = '\t\tInference time: %.2f ms' % (t * 1000.0 / cv2.getTickFrequency())
         print(label2)
 
-        # roi.
-        roi = fnGet_detected_roiImage(frame.copy(), each_result, larger_ratio=0.1)
-        img_list.append(roi)
+        if is_same_label(class_name, gt):
 
-        # augmented roi
-        augmented = fnGet_augmented(roi, distort_maxRatio=0.2, n=200)
-        img_list.append(augmented)
+            # roi.
+            roi = fnGet_detected_roiImage(frame.copy(), each_result, larger_ratio=0.1)
+            img_list.append(roi)
 
-        cv2.imshow('each roi', roi)
-        cv2.imshow('each roi augmented', augmented)
-        cv2.waitKey(0)
+            # augmented roi
+            augmented = fnGet_augmented(roi, distort_maxRatio=0.2, n=200)
+            img_list.append(augmented)
 
+            # cv2.imshow('each roi', roi)
+            # cv2.imshow('each roi augmented', augmented)
+            # cv2.waitKey(0)
+
+        else:
+            print("\t\t[warn] {} should be: {}".format(class_name, gt))
+            # cv2.imshow('ori image', frame)
+            # cv2.waitKey(0)
+
+    return img_list
 
