@@ -1,8 +1,17 @@
 import os
 import numpy as np
 
-path_test = 'C:\Users\cz199\PycharmProjects\yolov5_classify\datasets\iNat2017\labels\test\'
-path_pred = '...'
+# ====================
+# customise parameters
+# ====================
+path_project = "C:/Users/cz199/PycharmProjects/Animal-Detector/"
+
+# ======================
+# config path parameters
+# ======================
+path_label = path_project + "datasets/iNat2017/labels/"
+path_label_test = path_label + "test/"
+path_label_pred = "..."
 n_classes = 13
 
 # ================
@@ -11,9 +20,9 @@ n_classes = 13
 # initialise a y_test list as an empty list 
 y_test = np.array([])
 
-for file_name in os.listdir(path_test):
+for file_name in os.listdir(path_label_test):
     # for every label file in the test path
-    with open(path_test + file_name, 'r') as file:
+    with open(path_test + file_name, "r") as file:
         # take the first two elements of the label file as the classification result, e.g. string(1, 3) = class 13, string(1, space) = class 1.
         cls = file.read()[0:2]
         # transform the classification result from the string into an integer, e.g. string(1, 3) = int(13), string(1, space) = int(1).
@@ -27,9 +36,9 @@ for file_name in os.listdir(path_test):
 # initialise a y predicted list as an empty list 
 y_pred = np.array([])
 
-for file_name in os.listdir(path_pred):
+for file_name in os.listdir(path_label_pred):
     # for every label file in the prediction path
-    with open(path_pred + file_name, 'r') as file:
+    with open(path_pred + file_name, "r") as file:
         # take the first two elements of the label file as the classification result, e.g. string(1, 3) = class 13, string(1, space) = class 1.
         cls = file.read()[0:2]
         # transform the classification result from the string into an integer, e.g. string(1, 3) = int(13), string(1, space) = int(1).
@@ -40,14 +49,14 @@ for file_name in os.listdir(path_pred):
 # ==============================
 # compare y_test and y_predicted
 # ==============================
-'''
+"""
 comparative tuple
 out = [
     [sample 1 test, sample 1 pred],
     ...
     [sample N test, sample N pred]
 ]
-'''
+"""
 out = np.array([
     y_test,
     y_predicted
@@ -63,6 +72,6 @@ for k in range(n_classes):
     true_positive = np.sum(out_k[:, 0] == out_k[:, 1])
     # precision = true positive / predicted positive
     precision = true_positive / predicted_positive
-    print(f'class {k}')
-    print(f'precision {precision}')
+    print(f"class {k}")
+    print(f"precision {precision}")
   
