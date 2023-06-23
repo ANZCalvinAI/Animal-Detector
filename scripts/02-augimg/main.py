@@ -55,7 +55,11 @@ if __name__ == '__main__':
             aug_output = fnGenerate_augimg(img, net, classes, gt)
             print("\t[augment] Generate {} more.".format(len(aug_output)))
 
+            image_name = os.path.basename(image_path)
+            image_dirPath = os.path.dirname(image_path)
 
+            for idx, each_img in enumerate(aug_output):
 
-
+                aug_image_path = os.path.join(image_dirPath, "aug{}_{}".format(idx, image_name))
+                cv2.imwrite(aug_image_path, each_img)
 
