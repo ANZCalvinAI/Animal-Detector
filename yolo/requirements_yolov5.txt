@@ -1,0 +1,15 @@
+# Base
+gitpython
+matplotlib
+numpy
+opencv-python
+Pillow
+psutil
+PyYAML
+requests
+scipy
+thop
+torch
+torchvision
+tqdm
+ultralytics
