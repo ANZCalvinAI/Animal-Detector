@@ -1,24 +1,7 @@
 import os
 import torch
 
-# ============
-# config paths
-# ============
-path_project = os.path.abspath("..")
-path_pipeline = os.path.abspath(".")
 
-path_weight = path_pipeline + "/weights_fine_tuned"
-path_weight_yolo = path_weight + "/yolov5x.pt"
-
-path_images = path_project + "/datasets/pipeline/images"
-
-# =========
-# detection
-# =========
-yolov5 = torch.hub.load("ultralytics/yolov5", "custom", path=path_weight_yolo)
-
-
-# detection inference
 def list_files(direct):
     r = []
     for root, dirs, files in os.walk(direct):
@@ -27,11 +10,15 @@ def list_files(direct):
     return r
 
 
-images = list_files(path_images)
-
-print(images)
-
-out_detect = yolov5(images)
-
-out_detect.print()
-out_detect.save()
+# =========
+# detection
+# =========
+def inference(path_weight_yolo, path_images):
+    yolov5 = torch.hub.load("ultralytics/yolov5", "custom", path=path_weight_yolo)
+    images = list_files(path_images)
+    out_detect = yolov5(images)
+    with open("output.txt", "w") as f:
+        for i, image in enumerate(images):
+            out = out_detect.xyxy[i]
+            for *xyxy, conf, cls in out:
+                f.write(f'{i} {out_detect.names[int(cls)]} {conf} {xyxy[0]} {xyxy[1]} {xyxy[2]} {xyxy[3]}\n')
