@@ -9,7 +9,7 @@ from utils import (
 
 const_classesFile = "models/labels.txt"
 const_modelWeights = "models/yolov5x.onnx"
-const_dataset_path = "./dataset"
+const_dataset_path = "../../datasets/demo3-527classes/images"
 
 
 def load_deepLearning():
@@ -46,6 +46,7 @@ if __name__ == '__main__':
     # Get image list.
     data_dict = fnGet_dataset_dict(const_dataset_path)
     label_idx = 0
+    total_generated_idx = 0
     for k_label, v_images in data_dict.items():
         label_idx += 1
         print(f"\n[{label_idx}] k_label: {k_label}")
@@ -63,7 +64,9 @@ if __name__ == '__main__':
 
             for idx, each_img in enumerate(aug_output):
 
+                total_generated_idx += 1
+
                 aug_image_path = os.path.join(image_dirPath, "aug{}_{}".format(idx, image_name))
-                print("\t[new] Save in {}".format(aug_image_path))
+                print("\t[new] Save {}th in {}".format(total_generated_idx, aug_image_path))
                 cv2.imwrite(aug_image_path, each_img)
 
