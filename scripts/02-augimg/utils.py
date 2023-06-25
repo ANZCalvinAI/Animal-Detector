@@ -129,7 +129,7 @@ def fnGet_dataset_dict(const_dataset_path):
         folder_path = os.path.join(const_dataset_path, folder_name)
         image_pathList = \
             [os.path.join(folder_path, f) for f in os.listdir(folder_path)
-             if os.path.isfile(os.path.join(folder_path, f))]
+             if os.path.isfile(os.path.join(folder_path, f)) and not f.startswith("aug0_") and not f.startswith("aug1_")]
 
         data_dict[folder_name] = image_pathList
 

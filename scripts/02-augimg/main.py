@@ -21,6 +21,8 @@ def load_deepLearning():
 
     # Give the weight files to the model and load the network using them.
     net = cv2.dnn.readNet(const_modelWeights)
+    net.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
+    net.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA_FP16)
 
     return net, classes
 
@@ -43,9 +45,10 @@ if __name__ == '__main__':
 
     # Get image list.
     data_dict = fnGet_dataset_dict(const_dataset_path)
+    label_idx = 0
     for k_label, v_images in data_dict.items():
-
-        print(f"\nk_label: {k_label}")
+        label_idx += 1
+        print(f"\n[{label_idx}] k_label: {k_label}")
         for image_path in v_images:
 
             print(f"\n\tLoad image: {image_path}")
@@ -61,5 +64,6 @@ if __name__ == '__main__':
             for idx, each_img in enumerate(aug_output):
 
                 aug_image_path = os.path.join(image_dirPath, "aug{}_{}".format(idx, image_name))
+                print("\t[new] Save in {}".format(aug_image_path))
                 cv2.imwrite(aug_image_path, each_img)
 
