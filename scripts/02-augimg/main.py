@@ -45,6 +45,15 @@ if __name__ == '__main__':
 
     # Get image list.
     data_dict = fnGet_dataset_dict(const_dataset_path)
+    
+    #
+    # Step 1, delete old aug_* file in each species folder.
+    #
+    
+    
+    #
+    # Step 2, start a new augmnetation.
+    #
     label_idx = 0
     total_generated_idx = 0
     for k_label, v_images in data_dict.items():
@@ -69,4 +78,9 @@ if __name__ == '__main__':
                 aug_image_path = os.path.join(image_dirPath, "aug{}_{}".format(idx, image_name))
                 print("\t[new] Save {}th in {}".format(total_generated_idx, aug_image_path))
                 cv2.imwrite(aug_image_path, each_img)
+
+
+    #
+    # Step 3, balance each species size.
+    #
 
