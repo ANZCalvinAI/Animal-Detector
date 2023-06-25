@@ -1,0 +1,30 @@
+Install env.
+https://pyimagesearch.com/2020/02/03/how-to-use-opencvs-dnn-module-with-nvidia-gpus-cuda-and-cudnn/
+
+
+
+
+Download opencv-4.7.0 and opencv_contrib-4.7.0
+
+cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local -D WITH_TBB=ON -D ENABLE_FAST_MATH=1 -D CUDA_FAST_MATH=1 -D WITH_CUBLAS=1 -D WITH_CUDA=ON -D BUILD_opencv_cudacodec=OFF -D WITH_CUDNN=ON -D OPENCV_DNN_CUDA=ON -D CUDA_ARCH_BIN=7.5 -D WITH_V4L=ON -D WITH_QT=OFF -D WITH_OPENGL=ON -D WITH_GSTREAMER=ON -D OPENCV_GENERATE_PKGCONFIG=ON -D OPENCV_PC_FILE_NAME=opencv.pc -D OPENCV_ENABLE_NONFREE=ON -D OPENCV_PYTHON3_INSTALL_PATH=~/.local/lib/python3.8/site-packages/ -D PYTHON_EXECUTABLE=/usr/bin/python3.8 -D OPENCV_EXTRA_MODULES_PATH=~/Downloads/opencv_contrib/modules -D INSTALL_PYTHON_EXAMPLES=OFF -D INSTALL_C_EXAMPLES=OFF -D BUILD_EXAMPLES=OFF ..
+
+--   NVIDIA CUDA:                   YES (ver 11.7, CUFFT CUBLAS FAST_MATH)
+--     NVIDIA GPU arch:             75
+--     NVIDIA PTX archs:
+-- 
+--   cuDNN:                         YES (ver 8.6.0)
+-- 
+--   OpenCL:                        YES (no extra features)
+--     Include path:                /home/ubuntu/Downloads/opencv/3rdparty/include/opencl/1.2
+--     Link libraries:              Dynamic load
+-- 
+--   Python 3:
+--     Interpreter:                 /usr/bin/python3 (ver 3.8.10)
+--     Libraries:                   /usr/lib/x86_64-linux-gnu/libpython3.8.so (ver 3.8.10)
+--     numpy:                       /home/ubuntu/.local/lib/python3.8/site-packages/numpy/core/include (ver 1.24.3)
+--     install path:                /home/ubuntu/.local/lib/python3.8/site-packages//cv2/python-3.8
+-- 
+--   Python (for build):            /usr/bin/python3
+
+
+
