@@ -1,5 +1,6 @@
 import os
 import torch
+from torchvision.models import efficientnet_v2_s as effnetv2
 
 
 def list_files(direct):
@@ -13,10 +14,10 @@ def list_files(direct):
 # ==============
 # yolo detection
 # ==============
-def detect(path_weight_yolo, path_images):
-    yolov5 = torch.hub.load("ultralytics/yolov5", "custom", path=path_weight_yolo)
+def detect(model_detector="yolov5", weight_detector, path_images):
+    detector = torch.hub.load("ultralytics/" + model_detector, "custom", path=weight_detector)
     images = list_files(path_images)
-    out_detect = yolov5(images)
+    out_detect = detector(images)
     with open("output.txt", "w") as file:
         for i, image in enumerate(images):
             out = out_detect.xyxy[i]
@@ -31,7 +32,8 @@ def detect(path_weight_yolo, path_images):
 # =====================
 # effnet classification
 # =====================
-# def classify(...):
-#     ...
+def classify(model_classifier="effnetv2", weight_classifier, path_images):
+    if model_classifier="effnetv2":
+        classifier = effnetv2(weight_detector)
 
 # ...
