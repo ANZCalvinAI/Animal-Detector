@@ -1,9 +1,9 @@
 ### Input:
 ```
-image: data,  
-insect_class_index: int,  
-yolov5: model with fine tuned weights,  
-resnet: model with fine tuned weights  
+image: data;
+insect_class_index: int;
+detect: a detection function, needs specifing (a) model and weight and (b) data in parameters;
+classify: a classification function, needs specifing (a) model and weight and (b) data in parameters.
 ```
 
 ### Output:
