@@ -14,10 +14,10 @@ out_classify: int
 ## Algorithm: YOLO-ResNet Pipeline (e.g. for Insects)
 ### 1. detect objects from an image.
 ```
-object_list = yolov5(image)
+out_detect = detect(image)
 ```
 
-by the way, object_list should be like:
+by the way, out_detect should be an object list:
 ```
 [
     [1_class_index, 1_x_centre, 1_y_centre, 1_width, 1_height],  # for detected object 1
@@ -26,7 +26,7 @@ by the way, object_list should be like:
 ]
 ```
 
-### 2. find the insect object from object_list.
+### 2. find the insect object from out_detect.
 ```
 for object in object_list:
     if object[1] == insect_class_index:
@@ -35,7 +35,7 @@ for object in object_list:
 
 ### 3. input the insect object to the ResNet model, classifying it.
 ```
-out_classify = resnet(object)
+out_classify = classify(object)
 ```
 
 ### 4. return the ResNet classification result.
