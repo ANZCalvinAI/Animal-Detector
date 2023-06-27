@@ -14,9 +14,18 @@ def list_files(direct):
 # ==============
 # yolo detection
 # ==============
-def detect(model_detector="yolov5", weight_detector, image):
+def detect(model_detector="yolov5", weight_detector, cls_preset, ci_preset, image):
     detector = torch.hub.load("ultralytics/" + model_detector, "custom", path=weight_detector)
-    out_detect = detector(image).xyxy
+    out = detector(image)
+    for *xyxy, conf, cls in out:
+        if cls == cls_preset:
+            if conf >= ci_preset:
+                box = [xyxy[0], xyxy[1], xyxy[2], xyxy[3]]
+                # ...
+            eles:
+                print(f"{cls_preset} detected, but confidence level < {ci_preset}.")
+        else:
+            print(f"{cls_preset} not detected.")
 
 # =======================================
 # transform yolo output into effnet input
