@@ -1,14 +1,48 @@
 ### Input:
 ```
-image: data;
-insect_class_index: int;
-detect: a detection function, needs specifing (a) model and weight and (b) data in parameters;
-classify: a classification function, needs specifing (a) model and weight and (b) data in parameters.
+image;
+cls_preset: str;   # class to detect, not defaulted
+ci_preset: float;  # confidence interval level to recognise a detection, defaulted to 0.5
+model_detector;    # detector model, defaulted to ...
+weight_detector;   # detector weight, defaulted to ...
+model_classifier;  # classifer model, defaulted to ...
+weight_classifer:  # classifer weight, defaulted to ...
 ```
 
 ### Output:
 ```
-out_classify: int
+out_classify: str
+```
+
+### Functions Defined in the Script pipeline.py
+```
+1. detect()
+"""a detection function"""
+inputs:
+- (a) model_detector,
+- (b) weight_detector,
+- (c) cls_preset,
+- (d) ci_preset,
+- (e) image.
+output:
+- out_detect = [xyxy[0], xyxy[1], xyxy[2], xyxy[3]]  # bounding box
+
+2. crop()
+"""a cropping function"""
+inputs:
+- (a) image;
+- (b) out_detect.
+outputs:
+- image_cropped
+
+3. classify()
+"""a classification function"""
+inputs:
+- (a) model_classifier,
+- (b) weight_classifer,
+- (c) image_cropped.
+output:
+- out_classify
 ```
 
 ## Algorithm: YOLO-ResNet Pipeline (e.g. for Insects)
