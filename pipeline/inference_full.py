@@ -46,10 +46,9 @@ def detect(model_detector="yolov5", weight_detector, cls_custom, ci_custom=0.5, 
 # =====================
 # effnet classification
 # =====================
-def classify(model_classifier="effnet", weight_classifier, out_detect):
-    if model_classifier != "effnet":
-        raise ValueError("only 'effnet' is supported for classifier.")
-    classifier = effnet(weight_detector)
+# def classify(model_classifier="effnet", weight_classifier, out_detect):
+#     if model_classifier != "effnet":
+#         raise ValueError("only 'effnet' is supported for classifier.")
+#     classifier = effnet(weight_detector)
     
-
 # ...
