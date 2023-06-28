@@ -14,7 +14,7 @@ def list_files(direct):
 # ==============
 # yolo detection
 # ==============
-def detect(model_detector="yolov5", weight_detector, cls_custom=0.5, ci_custom, image):
+def detect(model_detector="yolov5", weight_detector, cls_custom, ci_custom=0.5, image):
     if model_detector != "yolov5":
         raise ValueError("only 'yolov5' is supported")
     detector = torch.hub.load("ultralytics/" + model_detector, "custom", path=weight_detector)
@@ -34,21 +34,14 @@ def detect(model_detector="yolov5", weight_detector, cls_custom=0.5, ci_custom, 
             )
         xmin, ymin, xmax, ymax = out["xmin"], out["ymin"], out["xmax"], out["ymax"]
         image = cv2.imread(image)
-        image = image[int(ymin):int(ymax), int(xmin):int(xmax)]
-    return image
-
-
-# =======================================
-# transform yolo output into effnet input
-# =======================================
-# def crop(image, out_detect):
-#     return image[xyxy[0]:xyxy[1], xyxy[2]:xyxy[3]]
+        image_cropped = image[int(ymin):int(ymax), int(xmin):int(xmax)]
+    return image_cropped
 
 
 # =====================
 # effnet classification
 # =====================
-def classify(model_classifier="effnet", weight_classifier, path_images):
+def classify(model_classifier="effnet", weight_classifier, image_cropped):
     if model_classifier != "effnet":
         raise ValueError("only 'effnet' is supported")
     classifier = effnet(weight_detector)
