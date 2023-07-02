@@ -24,18 +24,19 @@ These are details for to-do list.
 #### Classification
 
 - [x] Create scripts for iNat2021 dataset analysis - docs/species.md
-- [ ] Validate classification models.
+- [x] Validate classification models.
   - [x] Validate ResNet101 for 500 classes.
   - [ ] ~~Validate ResNet101 for 500 classes based on roi images.~~
   - [x] Validate ConvNeXt for 500 classes.
   - [x] Validate EfficientNetv2 for 500 classes.
-  - [ ] Validate EfficientNetv2 for 500 classes based on roi images.
-  
-- [ ] Validate detection models for 500 classes.
-  - [ ] Validate Yolov5 for 500 classes.
-
+  - [x] Validate EfficientNetv2 for 500 classes based on roi images.
+- [x] Validate detection models for 500 classes.
+  - [x] Validate Yolov5 for 500 classes.
 - [ ] Split date of Insect (Insecta) and Bird (Ave) for 2-stage inference.
-- [ ] Load Yolov5 to generate Roi smaller training images for classification.
+- [x] Load Yolov5 to generate Roi smaller training images for classification.
+  - [x] Generate roi dataset.
+  - [ ] Balance each species size.
+
 - [ ] Split into 5 training datasets for 2700 species of insect.
 - [ ] Identify the proper classification model, ResNet is just one of candidates.
   - [ ] Identify the deployment solution.
