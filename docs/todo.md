@@ -37,9 +37,9 @@ These are details for to-do list.
   - [x] Generate roi dataset.
   - [ ] Balance each species size.
 
-- [ ] Split into 5 training datasets for 2700 species of insect.
-- [ ] Identify the proper classification model, ResNet is just one of candidates.
-  - [ ] Identify the deployment solution.
+- [x] Split into 5 training datasets for 2700 species of insect.
+- [x] Identify the proper classification model, ResNet is just one of candidates.
+  - [x] Identify the deployment solution.
 - [ ] Training model for 2nd stage inference.W
   - [ ] ~~Transfer learning.~~
   - [ ] Fine tune. **
