@@ -24,15 +24,15 @@ def detect(image, model_detector="yolov5x", weight_detector=None, cls_custom=Non
     # check model
     if model_detector != "yolov5x":
         raise ValueError("only model 'yolov5x' supported for detector.\n")
-
-    # load detector
-    detector = torch.hub.load(
-        f"ultralytics/{model_detector}",
-        "custom",
-        path=weight_detector,
-        force_reload=True
-    )
-    print(f"specified weight '{weight_detector}' loaded.\n")
+    # load model
+    else:
+        detector = torch.hub.load(
+            "ultralytics/yolov5",
+            "custom",
+            path=weight_detector,
+            force_reload=True
+        )
+        print(f"specified weight '{weight_detector}' loaded.\n")
 
     # detect objects
     output = detector(image)
