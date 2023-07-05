@@ -1,3 +1,23 @@
-0 Insecta 0.8068870306015015 259.4432373046875 44.10912322998047 795.9091796875 379.38507080078125
-0 Insecta 0.6954666972160339 822.8171997070312 112.59356689453125 1122.6802978515625 769.1242065429688
-1 Insecta 0.7503377199172974 75.6200942993164 153.40423583984375 1939.251953125 1427.7845458984375
+C:\Users\cz199\PycharmProjects\Animal-Detector\venv\Scripts\python.exe C:\Users\cz199\PycharmProjects\Animal-Detector\pipeline\test_inference.py 
+image loaded.
+
+Downloading: "https://github.com/ultralytics/yolov5/zipball/master" to C:\Users\cz199/.cache\torch\hub\master.zip
+YOLOv5  2023-7-5 Python-3.11.3 torch-2.0.1+cpu CPU
+
+Fusing layers... 
+Model summary: 322 layers, 86254162 parameters, 0 gradients, 204.0 GFLOPs
+Adding AutoShape... 
+specified weight 'C:\Users\cz199\PycharmProjects\Animal-Detector\pipeline\weights\yolov5x.pt' loaded.
+
+2 or more 'Insecta' detected with specified confidence interval >= 0.5.
+
+select 1 detected 'Insecta' with the higher confidence interval = 0.79.
+
+C:\Users\cz199\PycharmProjects\Animal-Detector\pipeline\inference.py:57: FutureWarning: Calling int on a single element Series is deprecated and will raise a TypeError in the future. Use int(ser.iloc[0]) instead
+  image = image[int(ymin):int(ymax), int(xmin):int(xmax)]
+Using cache found in C:\Users\cz199/.cache\torch\hub\NVIDIA_DeepLearningExamples_torchhub
+Downloading Imagenet Classes names.
+Downloading finished.
+sample 0: [('sarong', '0.2%'), ('cowboy hat, ten-gallon hat', '0.2%'), ('bloodhound, sleuthhound', '0.2%'), ('water jug', '0.2%'), ('whistle', '0.2%')]
+
+Process finished with exit code 0
