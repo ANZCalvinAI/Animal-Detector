@@ -1,18 +1,17 @@
 import os
 from inference import inference
 
-# ============
-# config paths
-# ============
-path_project = os.path.abspath("..")
+# configure path
 path_pipeline = os.path.abspath(".")
+path_weight = os.path.join(path_pipeline, "weights")
+weight_detector = os.path.join(path_weight, "yolov5x.pt")
 
-path_weight = path_pipeline + "/weights_fine_tuned"
-path_weight_yolo = path_weight + "/yolov5x.pt"
+path_project = os.path.abspath("..")
+path_dataset = os.path.join(path_project, "datasets\pipeline")
 
-path_images = path_project + "/datasets/pipeline/images"
+# load image
+image1 = os.path.join(path_dataset, "image1.jpg")
 
-# =========
-# inference
-# =========
-inference(path_weight_yolo=path_weight_yolo, path_images=path_images)
+# inference(image=image1, weight_detector=weight_detector)
+print(image1)
+inference(image=image1)
