@@ -12,6 +12,4 @@ path_dataset = os.path.join(path_project, "datasets\pipeline")
 # load image
 image1 = os.path.join(path_dataset, "image1.jpg")
 
-# inference(image=image1, weight_detector=weight_detector)
-print(image1)
-inference(image=image1)
+inference(image=image1, weight_detector=weight_detector, cls_custom="Insecta")
