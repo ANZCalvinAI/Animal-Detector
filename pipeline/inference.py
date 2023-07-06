@@ -8,7 +8,7 @@ from torchvision.models import efficientnet_v2_s as effnetv2
 # ========
 # detector
 # ========
-def detect(image, model_detector="yolov5x", weight_detector=None, cls_custom=None, ci_custom=0.5):
+def detect(image, model_detector="yolov5x", weight_detector=None, cls_custom=None, ci_custom=0.1):
     # load image
     with open(image, "rb") as f:
         image = f.read()
@@ -101,19 +101,39 @@ def classify(image, model_classifier="effnetv2", weight_classifier=None, top_cla
 # =========
 # inference
 # =========
-def inference(
+def infer(
     image,
-    model_detector="yolov5x", weight_detector=None, cls_custom=None, ci_custom=0.5,
+    model_detector="yolov5x", weight_detector=None, cls_custom=None, ci_custom=0.1,
     model_classifier="effnetv2", weight_classifier=None, top_classes=5
 ):
     output = detect(
         image, model_detector=model_detector, weight_detector=weight_detector,
         cls_custom=cls_custom, ci_custom=ci_custom
     )
-
     output = classify(
         output, model_classifier=model_classifier, weight_classifier=weight_classifier,
         top_classes=top_classes
     )
-
     return output
+
+
+# ===============
+# batch inference
+# ===============
+def batch_infer(
+    images,
+    model_detector="yolov5x", weight_detector=None, cls_custom=None, ci_custom=0.5,
+    model_classifier="effnetv2", weight_classifier=None, top_classes=5
+):
+    outputs = []
+    for image in images:
+        output = detect(
+            image, model_detector=model_detector, weight_detector=weight_detector,
+            cls_custom=cls_custom, ci_custom=ci_custom
+        )
+        output = classify(
+            output, model_classifier=model_classifier, weight_classifier=weight_classifier,
+            top_classes=top_classes
+        )
+        outputs.append(output)
+    return outputs
