@@ -2,13 +2,19 @@ import numpy as np
 import torch
 import cv2
 from torchvision import transforms
-from torchvision.models import efficientnet_v2_s as effnetv2
+from torchvision.models import efficientnet_v2_m as effnetv2m
+
+
+# ======
+# device
+# ======
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 # ========
 # detector
 # ========
-def detect(image, model_detector="yolov5x", weight_detector=None, cls_custom=None, ci_custom=0.1):
+def detect(image, cls_custom=None, ci_custom=0.1, model_detector="yolov5x", weight_detector=None):
     # load image
     with open(image, "rb") as f:
         image = f.read()
@@ -32,6 +38,7 @@ def detect(image, model_detector="yolov5x", weight_detector=None, cls_custom=Non
             path=weight_detector,
             force_reload=True
         )
+        detector = detector.to(device)
         print(f"specified weight '{weight_detector}' loaded.\n")
 
     # detect objects
@@ -48,7 +55,7 @@ def detect(image, model_detector="yolov5x", weight_detector=None, cls_custom=Non
         output = output.loc[[output["confidence"].idxmax()]]
         ci_high = round(output["confidence"].iloc[0], 2)
         print(f"2 or more '{cls_custom}' detected with specified confidence interval >= {ci_custom}.\n")
-        print(f"select 1 detected '{cls_custom}' with the higher confidence interval = {ci_high}.\n")
+        print(f"1 detected '{cls_custom}' with higher confidence interval = {ci_high} selected.\n")
 
     # calculate bounding box
     xmin, xmax, ymin, ymax = output["xmin"], output["xmax"], output["ymin"], output["ymax"]
@@ -77,15 +84,13 @@ def detect(image, model_detector="yolov5x", weight_detector=None, cls_custom=Non
 # ==========
 # classifier
 # ==========
-def classify(image, model_classifier="effnetv2", weight_classifier=None, top_classes=5):
+def classify(image, top_classes=5, model_classifier="effnetv2m", weight_classifier=None):
     # check model
-    if model_classifier != "effnetv2":
-        raise ValueError("only model 'effnetv2' is supported for classifier.")
-
-    # check weight
-    if weight_classifier is None:
-        classifier = effnetv2(pretrained=True)
-
+    if model_classifier != "effnetv2m":
+        raise ValueError("only model 'effnetv2m' is supported for classifier.")
+    else:
+        classifier = effnetv2m()
+        classifier.load_state_dict(torch.load(weight_classifier, map_location=device))
     # classify object
     with torch.no_grad():
         output = torch.nn.functional.softmax(classifier(image), dim=1)
@@ -102,18 +107,20 @@ def classify(image, model_classifier="effnetv2", weight_classifier=None, top_cla
 # inference
 # =========
 def infer(
-    image,
-    model_detector="yolov5x", weight_detector=None, cls_custom=None, ci_custom=0.1,
-    model_classifier="effnetv2", weight_classifier=None, top_classes=5
+    image, cls_custom=None, ci_custom=0.1, top_classes=5,
+    model_detector="yolov5x", weight_detector=None,
+    model_classifier="effnetv2m", weight_classifier=None
 ):
     output = detect(
-        image, model_detector=model_detector, weight_detector=weight_detector,
-        cls_custom=cls_custom, ci_custom=ci_custom
+        image, cls_custom=cls_custom, ci_custom=ci_custom,
+        model_detector=model_detector, weight_detector=weight_detector
     )
+
     output = classify(
-        output, model_classifier=model_classifier, weight_classifier=weight_classifier,
-        top_classes=top_classes
+        output, top_classes=top_classes,
+        model_classifier=model_classifier, weight_classifier=weight_classifier
     )
+
     return output
 
 
@@ -121,19 +128,23 @@ def infer(
 # batch inference
 # ===============
 def batch_infer(
-    images,
-    model_detector="yolov5x", weight_detector=None, cls_custom=None, ci_custom=0.5,
-    model_classifier="effnetv2", weight_classifier=None, top_classes=5
+    images, cls_custom=None, ci_custom=0.1, top_classes=5,
+    model_detector="yolov5x", weight_detector=None,
+    model_classifier="effnetv2m", weight_classifier=None
 ):
     outputs = []
+
     for image in images:
         output = detect(
-            image, model_detector=model_detector, weight_detector=weight_detector,
-            cls_custom=cls_custom, ci_custom=ci_custom
+            image, cls_custom=cls_custom, ci_custom=ci_custom,
+            model_detector=model_detector, weight_detector=weight_detector
         )
+
         output = classify(
-            output, model_classifier=model_classifier, weight_classifier=weight_classifier,
-            top_classes=top_classes
+            output, top_classes=top_classes,
+            model_classifier=model_classifier, weight_classifier=weight_classifier
         )
+
         outputs.append(output)
+
     return outputs
