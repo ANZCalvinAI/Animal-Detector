@@ -39,7 +39,7 @@ def detect(image, cls_custom=None, ci_custom=0.1, model_detector="yolov5x", weig
             force_reload=True
         )
         detector = detector.to(device)
-        print(f"specified weight '{weight_detector}' loaded.\n")
+        print(f"weight '{weight_detector}' loaded.\n")
 
     # detect objects
     output = detector(image)
@@ -122,29 +122,3 @@ def infer(
     )
 
     return output
-
-
-# ===============
-# batch inference
-# ===============
-def batch_infer(
-    images, cls_custom=None, ci_custom=0.1, top_classes=5,
-    model_detector="yolov5x", weight_detector=None,
-    model_classifier="effnetv2m", weight_classifier=None
-):
-    outputs = []
-
-    for image in images:
-        output = detect(
-            image, cls_custom=cls_custom, ci_custom=ci_custom,
-            model_detector=model_detector, weight_detector=weight_detector
-        )
-
-        output = classify(
-            output, top_classes=top_classes,
-            model_classifier=model_classifier, weight_classifier=weight_classifier
-        )
-
-        outputs.append(output)
-
-    return outputs
