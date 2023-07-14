@@ -1,4 +1,6 @@
+import os
 import numpy as np
+import pandas as pd
 import torch
 import cv2
 from torchvision import transforms
@@ -91,15 +93,34 @@ def batch_infer(
 
         with torch.no_grad():
             output = torch.nn.functional.softmax(classifier(image), dim=1)
-        utils = torch.hub.load(
-            "NVIDIA/DeepLearningExamples:torchhub",
-            "nvidia_convnets_processing_utils"
-        )
-        output = utils.pick_n_best(predictions=output, n=top_classes)
-        output = [cls[0] for cls in output[0]]
+        output = torch.topk(output, top_classes)
 
-        outputs = outputs.append(output)
+        cls, prob = output.indices, output.values
 
-    output = [cls for cls in outputs[0] if cls in outputs[1]]
+        clses.append(cls.squeeze())
+        probs.append(prob.squeeze())
+
+    cls_common = [cls for cls in clses[0] if cls in clses[1]]
+
+    indices = []
+    for i in range(len(images)):
+        inds = []
+        for cls in cls_common:
+            for ind, val in enumerate(clses[i]):
+                if val == cls:
+                    inds.append(ind)
+        indices.append(inds)
+
+    prob_common = []
+    for i in range(len(cls_common)):
+        prob_common.append(probs[0][indices[0][i]] * probs[1][indices[1][i]])
+
+    output = {
+        "class": cls_common,
+        "joint probability": prob_common
+    }
+
+    output = pd.DataFrame(output)
   
     return output
+    
