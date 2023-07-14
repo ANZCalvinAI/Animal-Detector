@@ -100,6 +100,7 @@ def batch_infer(
         clses.append(cls.squeeze())
         probs.append(prob.squeeze())
 
+    # calculate common classes
     cls_common = [cls for cls in clses[0] if cls in clses[1]]
 
     indices = []
@@ -111,6 +112,7 @@ def batch_infer(
                     inds.append(ind)
         indices.append(inds)
 
+    # calculate joint probabilities
     prob_common = []
     for i in range(len(cls_common)):
         prob_common.append(probs[0][indices[0][i]] * probs[1][indices[1][i]])
