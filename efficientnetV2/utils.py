@@ -45,10 +45,15 @@ def read_split_data(root: str, val_rate: float = 0.2):
         # 按比例随机采样验证样本
         val_path = random.sample(images, k=int(len(images) * val_rate))
 
-        for img_path in images:
-            if img_path in val_path:  # 如果该路径在采样的验证集样本中则存入验证集
+        # print("class: {}".format(cla))
+        for idx, img_path in enumerate(images):
+            # if idx % 1000 == 0:
+            #     print("{}/{}".format(idx, len(images)))
+
+            if img_path in val_path:  # 如果该路径在采样的验证集样本中则存入验证集(需要优化)
                 val_images_path.append(img_path)
                 val_images_label.append(image_class)
+
             else:  # 否则存入训练集
                 train_images_path.append(img_path)
                 train_images_label.append(image_class)

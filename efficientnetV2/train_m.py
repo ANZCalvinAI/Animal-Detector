@@ -9,7 +9,7 @@ from torch.utils.tensorboard import SummaryWriter
 from torchvision import transforms
 import torch.optim.lr_scheduler as lr_scheduler
 
-from model import efficientnetv2_s as create_model
+from model import efficientnetv2_m as create_model
 from my_dataset import MyDataSet
 from utils import read_split_data, train_one_epoch, evaluate
 
@@ -145,7 +145,7 @@ if __name__ == '__main__':
     parser.add_argument('--data-path', type=str,
                         default="/data/flower_photos")
 
-    parser.add_argument('--weights', type=str, default='./pre_efficientnetv2-s.pth',
+    parser.add_argument('--weights', type=str, default='./pre_efficientnetv2-m.pth',
                         help='initial weights path')
     parser.add_argument('--freeze-layers', type=bool, default=False)
     parser.add_argument('--device', default='cuda:0', help='device id (i.e. 0 or 0,1 or cpu)')
